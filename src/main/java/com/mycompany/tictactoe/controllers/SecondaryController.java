@@ -1,5 +1,6 @@
-package com.mycompany.tictactoe;
+package com.mycompany.tictactoe.controllers;
 
+import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import javafx.fxml.FXML;
 
