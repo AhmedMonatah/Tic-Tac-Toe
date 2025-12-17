@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%,#7A3DF0 65%,#205CFC 100% ); -fx-border-color: white; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.views.AndrewFXMLController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%,#7A3DF0 65%,#205CFC 100% );" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.AndrewFXMLController">
    <top>
       <TextFlow prefHeight="93.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
