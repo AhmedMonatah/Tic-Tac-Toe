@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -82,7 +83,7 @@
                                     <Insets bottom="8.0" left="10.0" />
                                  </VBox.margin>
                               </Text>
-                              <TextField maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Enter your username" style="-fx-border-color: white; -fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: white;">
+                              <TextField maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Enter your username" style="-fx-border-color: white; -fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: black;">
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
@@ -95,13 +96,14 @@
                                     <Insets bottom="8.0" left="10.0" />
                                  </VBox.margin>
                               </Text>
-                              <TextField layoutX="30.0" layoutY="180.0" maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Enter your password" style="-fx-border-color: white; -fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: white;">
-                                 <padding>
-                                    <Insets bottom="10.0" />
-                                 </padding>
+                              <PasswordField maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Enter your password" style="-fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-color: white; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: black;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
-                                 </VBox.margin></TextField>
+                                 </VBox.margin>
+                              </PasswordField>
                               <Text fill="WHITE" layoutX="30.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password">
                                  <font>
                                     <Font size="14.0" />
@@ -110,17 +112,20 @@
                                     <Insets bottom="8.0" left="10.0" />
                                  </VBox.margin>
                               </Text>
-                              <TextField layoutX="30.0" layoutY="57.0" maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Confirm your password" style="-fx-border-color: white; -fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: white;">
+                              <PasswordField layoutX="30.0" layoutY="154.0" maxHeight="60.0" maxWidth="360.0" prefHeight="60.0" prefWidth="360.0" promptText="Enter your password" style="-fx-background-color: #ffffffa0; -fx-background-radius: 15; -fx-border-color: white; -fx-border-radius: 15; -fx-prompt-text-fill: white; -fx-text-fill: black;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
-                              </TextField>
+                              </PasswordField>
                               <Button maxHeight="60.0" maxWidth="360.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="360.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #ec4899, #7c3aed); -fx-background-radius: 15;" text="Register">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="10.0" top="15.0" />
                                  </VBox.margin>
                               </Button>
-                              <HBox alignment="CENTER" maxHeight="20.0" maxWidth="360.0" prefHeight="20.0" prefWidth="360.0" spacing="5.0">
+                              <HBox alignment="CENTER" maxHeight="25.0" maxWidth="360.0" prefHeight="25.0" prefWidth="360.0" spacing="5.0">
                                  <children>
                                     <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Already have an account?">
                                        <font>
