@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
  *
  * @author LENOVO
  */
-public class AndrewFXMLController implements Initializable {
+public class LoginController implements Initializable {
 
 
     @FXML
@@ -42,9 +42,6 @@ public class AndrewFXMLController implements Initializable {
     private void usernameTextField(ActionEvent event) {
     }
 
-    @FXML
-    private void userPasswordTextField(ActionEvent event) {
-    }
 
     @FXML
     private void loginButton(ActionEvent event) {
@@ -52,6 +49,10 @@ public class AndrewFXMLController implements Initializable {
 
     @FXML
     private void toRegisterPage(MouseEvent event) {
+    }
+
+    @FXML
+    private void userPassword(ActionEvent event) {
     }
 
 }
