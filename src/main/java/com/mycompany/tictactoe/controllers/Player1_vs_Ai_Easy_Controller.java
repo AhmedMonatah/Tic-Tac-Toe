@@ -6,33 +6,27 @@ package com.mycompany.tictactoe.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 
 /**
  * FXML Controller class
  *
- * @author LENOVO
+ * @author Ahmed
  */
-public class LoginController implements Initializable {
+public class Player1_vs_Ai_Easy_Controller implements Initializable {
 
+    @FXML
+    private Button backButton;
+    @FXML
+    private TextField player1Input;
+    @FXML
+    private CheckBox recordCheckbox;
 
-    @FXML
-    private TextField username;
-    @FXML
-    private TextField userPassword;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Text registerPage;
     /**
      * Initializes the controller class.
      */
@@ -40,22 +34,9 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void handleBack(MouseEvent event) {
+    }
     
-    @FXML
-    private void usernameTextField(ActionEvent event) {
-    }
-
-
-    @FXML
-    private void loginButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void toRegisterPage(MouseEvent event) {
-    }
-
-    @FXML
-    private void userPassword(ActionEvent event) {
-    }
-
 }

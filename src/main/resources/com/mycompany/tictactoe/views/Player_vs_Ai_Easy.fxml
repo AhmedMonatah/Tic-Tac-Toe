@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #db2777, #9333ea, #2563eb);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.Player1_vs_Ai_Easy_Controller">
+    <children>
+        <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42" prefWidth="42" style="-fx-background-color: tranparent; -fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
+            <graphic>
+                <ImageView fitHeight="26" fitWidth="26" onMouseClicked="#handleBack" preserveRatio="true" style="-fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
+                    <image>
+                        <Image url="@../../../../images/back.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+
+        </Button>
+
+
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label text="PREPARE FOR BATTLE" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold Italic" size="42.0" />
+                    </font>
+                    <effect>
+                        <DropShadow blurType="GAUSSIAN" color="#ffffffcc" radius="30.0" spread="0.3" />
+                    </effect>
+                </Label>
+
+                <!-- Main Conflict Area -->
+                <HBox alignment="CENTER" spacing="50.0">
+                    <children>
+                  
+                        <!-- Player 1 Panel (Pink) - Input Enabled -->
+                        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="280.0" spacing="20.0" style="-fx-background-color: rgba(249, 168, 212, 0.1); -fx-background-radius: 20; -fx-border-color: #f9a8d4; -fx-border-radius: 20; -fx-border-width: 3;">
+                            <children>
+                                <Label text="PLAYER 1" textFill="#f9a8d4">
+                                    <font>
+                                        <Font name="System Bold" size="24.0" />
+                                    </font>
+                                    <effect>
+                                        <DropShadow color="#f9a8d4" radius="10.0" />
+                                    </effect>
+                                </Label>
+                                <!-- Avatar / Symbol -->
+                                <Label text="O" textFill="#f9a8d4">
+                                    <font>
+                                        <Font name="System Bold" size="96.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow level="0.8" />
+                                    </effect>
+                                </Label>
+                                <TextField fx:id="player1Input" alignment="CENTER" promptText="ENTER NAME" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.5); -fx-border-color: #f9a8d4; -fx-border-width: 0 0 2 0; -fx-font-size: 18px; -fx-font-weight: bold;">
+                                    <VBox.margin>
+                                        <Insets left="30.0" right="30.0" />
+                                    </VBox.margin>
+                                </TextField>
+                            </children>
+                            <effect>
+                                <DropShadow color="#f9a8d440" height="50.0" radius="24.5" width="50.0" />
+                            </effect>
+                        </VBox>
+
+                        <!-- VS Graphic -->
+                        <VBox alignment="CENTER">
+                            <children>
+                                <Label text="VS" textFill="#ffffff">
+                                    <font>
+                                        <Font name="System Bold Italic" size="72.0" />
+                                    </font>
+                                    <effect>
+                                        <DropShadow color="WHITE" height="60.0" radius="29.5" spread="0.4" width="60.0" />
+                                    </effect>
+                                </Label>
+                            </children>
+                        </VBox>
+
+                        <!-- AI Panel (Cyan) - Static / No Input -->
+                        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="280.0" spacing="20.0" style="-fx-background-color: rgba(103, 232, 249, 0.1); -fx-background-radius: 20; -fx-border-color: #67e8f9; -fx-border-radius: 20; -fx-border-width: 3;">
+                            <children>
+                                <Label text="THE AI" textFill="#67e8f9">
+                                    <font>
+                                        <Font name="System Bold" size="24.0" />
+                                    </font>
+                                    <effect>
+                                        <DropShadow color="#67e8f9" radius="10.0" />
+                                    </effect>
+                                </Label>
+                                <!-- Robot Avatar -->
+                                <Label text="🤖" textFill="#67e8f9">
+                                    <font>
+                                        <Font name="System Bold" size="96.0" />
+                                    </font>
+                                    <effect>
+                                        <Glow level="0.8" />
+                                    </effect>
+                                </Label>
+                                <!-- Static Text instead of Input -->
+                                <Label text="DIFFICULTY: EASY" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                    <effect>
+                                        <DropShadow color="#67e8f980" radius="10.0" />
+                                    </effect>
+                                    <padding>
+                                        <Insets bottom="5.0" />
+                                    </padding>
+                                    <VBox.margin>
+                                        <Insets top="5.0" />
+                                    </VBox.margin>
+                                </Label>
+                            </children>
+                            <effect>
+                                <DropShadow color="#67e8f940" height="50.0" radius="24.5" width="50.0" />
+                            </effect>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <VBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <CheckBox fx:id="recordCheckbox" mnemonicParsing="false" text="REC MATCH" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <effect>
+                                <DropShadow color="#00000080" radius="5.0" />
+                            </effect>
+                        </CheckBox>
+
+                        <Button text="START BATTLE"
+                                mnemonicParsing="false"
+                                prefWidth="250"
+                                prefHeight="60"
+                                style="-fx-background-color: linear-gradient(to right, #ec4899, #9333ea); 
+                       -fx-text-fill: white; 
+                       -fx-font-size: 24px; 
+                       -fx-font-weight: bold; 
+                       -fx-background-radius: 30; 
+                       -fx-border-radius: 30; 
+                       -fx-border-color: white; 
+                       -fx-border-width: 2; 
+                       -fx-cursor: hand; 
+                       -fx-padding: 0; 
+                       -fx-alignment: CENTER; 
+                       -fx-content-display: CENTER;" 
+                        />
+
+                    </children>
+                </VBox>
+
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
