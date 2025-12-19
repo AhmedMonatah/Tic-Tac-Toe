@@ -14,11 +14,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-<<<<<<< HEAD
-        scene = new Scene(loadFXML("GameRecordings"), 900, 600);
-=======
-        scene = new Scene(loadFXML("Player_vs_Ai_Hard"), 900, 600);
->>>>>>> 303d10b8c570ca632b4c37deca66876c398b3549
+
+        scene = new Scene(loadFXML("Login"), 900, 600);
         stage.setScene(scene);
         stage.show();
     }
