@@ -1,0 +1,11 @@
+#recordsListView .list-cell:filled:selected {
+    -fx-background-color: transparent;
+}
+
+#recordsListView .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+}
+
