@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mycompany.tictactoe.controllers.ChoiceDifficultyController"
-            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%, #7A3DF0 65%, #205CFC 100%);">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%, #7A3DF0 65%, #205CFC 100%);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.mycompany.tictactoe.controllers.ChoiceDifficultyController">
     <children>
-        <VBox alignment="CENTER" spacing="25"
-              AnchorPane.topAnchor="0"
-              AnchorPane.bottomAnchor="0"
-              AnchorPane.leftAnchor="0"
-              AnchorPane.rightAnchor="0">
-            <Label text="Select Difficulty" style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;"/>
+        <VBox alignment="CENTER" spacing="25" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Label style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;" text="Select Difficulty" />
 
-            <Label text="Choose your AI opponent level" style="-fx-text-fill: #E0E0E0;-fx-font-size: 16px;"/>
+            <Label style="-fx-text-fill: #E0E0E0;-fx-font-size: 16px;" text="Choose your AI opponent level" />
 
-            <Button text="◎  Easy" prefWidth="360" prefHeight="60"  style="-fx-background-color: #00C853; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;" />
+            <Button onAction="#easyMode" prefHeight="60" prefWidth="360" style="-fx-background-color: #00C853; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;" text="◎  Easy" />
 
-            <Button text="🔥  Medium" prefWidth="360" prefHeight="60" style="-fx-background-color: #FF6D00; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;"/>
+            <Button onAction="#mediumMode" prefHeight="60" prefWidth="360" style="-fx-background-color: #FF6D00; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;" text="🔥  Medium" />
 
-            <Button text="💀  Hard"  prefWidth="360" prefHeight="60" style="-fx-background-color: #FF1744; -fx-text-fill: white; -fx-font-size: 18px;-fx-font-weight: bold; -fx-background-radius: 14;"/>
+            <Button onAction="#hardMode" prefHeight="60" prefWidth="360" style="-fx-background-color: #FF1744; -fx-text-fill: white; -fx-font-size: 18px;-fx-font-weight: bold; -fx-background-radius: 14;" text="💀  Hard" />
 
         </VBox>
     </children>
 </AnchorPane>
-
