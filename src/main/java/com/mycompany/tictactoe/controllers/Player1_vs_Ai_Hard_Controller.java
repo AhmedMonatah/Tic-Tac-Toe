@@ -6,6 +6,7 @@ package com.mycompany.tictactoe.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -37,6 +38,10 @@ public class Player1_vs_Ai_Hard_Controller implements Initializable {
     
     @FXML
     private void handleBack(MouseEvent event) {
+    }
+
+    @FXML
+    private void btn(ActionEvent event) {
     }
 
 }

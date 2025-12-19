@@ -134,23 +134,7 @@
                             </effect>
                         </CheckBox>
 
-                        <Button text="START BATTLE"
-                                mnemonicParsing="false"
-                                prefWidth="250"
-                                prefHeight="60"
-                                style="-fx-background-color: linear-gradient(to right, #ec4899, #9333ea); 
-                       -fx-text-fill: white; 
-                       -fx-font-size: 24px; 
-                       -fx-font-weight: bold; 
-                       -fx-background-radius: 30; 
-                       -fx-border-radius: 30; 
-                       -fx-border-color: white; 
-                       -fx-border-width: 2; 
-                       -fx-cursor: hand; 
-                       -fx-padding: 0; 
-                       -fx-alignment: CENTER; 
-                       -fx-content-display: CENTER;" 
-                        />
+                        <Button mnemonicParsing="false" onAction="#btn" prefHeight="60" prefWidth="250" style="-fx-background-color: linear-gradient(to right, #ec4899, #9333ea);                         -fx-text-fill: white;                         -fx-font-size: 24px;                         -fx-font-weight: bold;                         -fx-background-radius: 30;                         -fx-border-radius: 30;                         -fx-border-color: white;                         -fx-border-width: 2;                         -fx-cursor: hand;                         -fx-padding: 0;                         -fx-alignment: CENTER;                         -fx-content-display: CENTER;" text="START BATTLE" />
 
                     </children>
                 </VBox>

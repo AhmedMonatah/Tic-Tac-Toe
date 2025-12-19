@@ -78,5 +78,17 @@ public class GameplayController implements Initializable {
     @FXML
     private void btn22(ActionEvent event) {
     }
+
+    @FXML
+    private void newRound(ActionEvent event) {
+    }
+
+    @FXML
+    private void changeMode(ActionEvent event) {
+    }
+
+    @FXML
+    private void logout(ActionEvent event) {
+    }
     
 }
