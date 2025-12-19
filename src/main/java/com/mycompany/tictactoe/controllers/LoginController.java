@@ -6,6 +6,7 @@ package com.mycompany.tictactoe.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +14,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
@@ -30,12 +33,16 @@ public class LoginController implements Initializable {
     private Button loginButton;
     @FXML
     private Text registerPage;
+    @FXML
+    private BorderPane myBorder;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        
+       
     }    
     
     @FXML
