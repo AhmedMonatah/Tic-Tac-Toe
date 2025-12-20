@@ -1,19 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.tictactoe.controllers;
 
+import static classes.AlertUtils.showError;
+import static classes.AlertUtils.showInfo;
+import classes.AppConfig;
 import classes.AppRoute;
-import classes.User;
-import classes.UserDAO;
-import java.net.URL;
-import java.util.ResourceBundle;
+import classes.Message;
+import classes.NetworkClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -21,84 +17,70 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author omark
- */
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class RegisterViewController implements Initializable {
 
     @FXML
     private Text logintext;
     @FXML
     private Button registerbtn;
-    
-    private final UserDAO userDAO = new UserDAO();
     @FXML
     private TextField username;
     @FXML
     private PasswordField passwordField;
     @FXML
     private PasswordField confirmpass;
+   private NetworkClient client = AppConfig.CLIENT;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    public void initialize(URL url, ResourceBundle rb) {}
 
     @FXML
     private void toLoginPage(MouseEvent event) {
-      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    new AppRoute().goToLoginPage(stage); 
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        new AppRoute().goToLoginPage(stage); 
+    }
+@FXML
+private void onRegister(ActionEvent event) {
+    if (client == null) {
+        showError("You must connect to the server first!");
+        return;
     }
 
-    @FXML
-    private void onRegister(ActionEvent event) {
+    String user = username.getText().trim();
+    String pass = passwordField.getText().trim();
+    String confirm = confirmpass.getText().trim();
 
-        String userNameInput = username.getText().trim();
-        String passwordInput = passwordField.getText().trim();
-        String confirmPasswordInput = confirmpass.getText().trim();
+    if(user.isEmpty() || pass.isEmpty()) {
+        showError("Please fill all fields");
+        return;
+    }
 
-        if (userNameInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
-            showError("Please fill all fields");
-            return;
-        }
+    if(!pass.equals(confirm)) {
+        showError("Passwords do not match");
+        return;
+    }
 
-        if (!passwordInput.equals(confirmPasswordInput)) {
-            showError("Passwords do not match");
-            return;
-        }
+    Message msg = new Message();
+    msg.setAction("register");
+    msg.setUsername(user);
+    msg.setPassword(pass);
 
-        if (userDAO.userExists(userNameInput)) {
-            showError("Username already exists");
-            return;
-        }
+    client.sendMessage(msg);
 
-        User user = new User(userNameInput, passwordInput);
-        boolean success = userDAO.register(user);
-
-        if (success) {
+    Message response = client.receiveMessage();
+    if(response != null && response.getAction().equals("register_response")) {
+        if(response.isSuccess()) {
             showInfo("Registered successfully!");
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            new AppRoute().goToUserListPage(stage);
+            new AppRoute().goToLoginPage(stage);
         } else {
-            showError("Failed to register user");
+            showError(response.getMessage());
         }
+    } else {
+        showError("No response from server");
     }
-
-private void showError(String msg) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setContentText(msg);
-    alert.showAndWait();
 }
-
-private void showInfo(String msg) {
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setContentText(msg);
-    alert.showAndWait();
-}
-
 }

@@ -7,4 +7,5 @@ module com.mycompany.tictactoe {
     opens com.mycompany.tictactoe.controllers to javafx.fxml;
 
     exports com.mycompany.tictactoe;
+    requires com.google.gson;
 }

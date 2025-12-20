@@ -1,45 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.tictactoe.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import classes.NetworkClient;
+import classes.OnlineUser;
+import classes.Message;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
-/**
- * FXML Controller class
- *
- * @author Ahmed
- */
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class Users_listController implements Initializable {
 
+    @FXML
+    private ListView<Button> onlineUsersList;
+    @FXML
+    private Text numberOfAvailablePlayers;
 
-    @FXML
-    private Text numberOfAvilablePlayers;
-    @FXML
-    private HBox itemAvilablePlayer;
-    @FXML
-    private Text avilable_player;
-    /**
-     * Initializes the controller class.
-     */
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
-    @FXML
-    private void requestBtn(ActionEvent event) {
+     
+    }
+
+   
+
+    private void requestBtn(OnlineUser user) {
+
     }
 
     @FXML
     private void BackToMenu(ActionEvent event) {
     }
-
 }
