@@ -38,6 +38,12 @@ public class GameModesController implements Initializable {
 
     @FXML
     private void s2PlayersButton(ActionEvent event) {
+        try {
+            App.setRoot("Player1_vs_Player2");
+        } catch (IOException ex) {
+            System.getLogger(GameModesController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }
 
     @FXML
