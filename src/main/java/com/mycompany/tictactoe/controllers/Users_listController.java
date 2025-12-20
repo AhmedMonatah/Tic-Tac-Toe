@@ -14,13 +14,16 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.layout.HBox;
 
 public class Users_listController implements Initializable {
 
     @FXML
-    private ListView<Button> onlineUsersList;
+    private Text numberOfAvilablePlayers;
     @FXML
-    private Text numberOfAvailablePlayers;
+    private HBox itemAvilablePlayer;
+    @FXML
+    private Text avilable_player;
 
 
 
@@ -37,5 +40,9 @@ public class Users_listController implements Initializable {
 
     @FXML
     private void BackToMenu(ActionEvent event) {
+    }
+
+    @FXML
+    private void requestBtn(ActionEvent event) {
     }
 }

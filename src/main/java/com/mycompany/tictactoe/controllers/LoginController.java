@@ -29,50 +29,60 @@ public class LoginController implements Initializable {
     private Button loginButton;
     @FXML
     private Text registerPage;
-    
+
     private NetworkClient client = AppConfig.CLIENT;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {}
+    public void initialize(URL url, ResourceBundle rb) {
+    }
 
     @FXML
     private void toRegisterPage(MouseEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        new AppRoute().goToRegisterPage(stage);  
-    }
-@FXML
-private void loginButton(ActionEvent event) {
-    if (client == null) {
-        showError("You must connect to the server first!");
-        return;
+        new AppRoute().goToRegisterPage(stage);
     }
 
-    String user = username.getText().trim();
-    String pass = userPassword.getText().trim();
-
-    if(user.isEmpty() || pass.isEmpty()) {
-        showError("Please fill all fields");
-        return;
+    @FXML
+    private void usernameTextField(ActionEvent event) {
     }
 
-    // إعداد رسالة login
-    Message msg = new Message();
-    msg.setAction("login");
-    msg.setUsername(user);
-    msg.setPassword(pass);
+    @FXML
+    private void userPasswordTextField(ActionEvent event) {
+    }
 
-    client.sendMessage(msg);
-
-    Message response = client.receiveMessage();
-    if(response != null && response.getAction().equals("login_response")) {
-        if(response.isSuccess()) {
-            showInfo("Login successful!");
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            new AppRoute().goToMenuPage(stage); // اذهب للصفحة الرئيسية
-        } else {
-            showError(response.getMessage());
+    @FXML
+    private void loginButton(ActionEvent event) {
+        if (client == null) {
+            showError("You must connect to the server first!");
+            return;
         }
-    } else {
-        showError("No response from server");
+
+        String user = username.getText().trim();
+        String pass = userPassword.getText().trim();
+
+        if(user.isEmpty() || pass.isEmpty()) {
+            showError("Please fill all fields");
+            return;
+        }
+
+        Message msg = new Message();
+        msg.setAction("login");
+        msg.setUsername(user);
+        msg.setPassword(pass);
+
+        client.sendMessage(msg);
+
+        Message response = client.receiveMessage();
+        if(response != null && "login_response".equals(response.getAction())) {
+            if(response.isSuccess()) {
+                showInfo("Login successful!");
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                new AppRoute().goToUserListPage(stage);
+            } else {
+                showError(response.getMessage());
+            }
+        } else {
+            showError("No response from server");
+        }
     }
 }
