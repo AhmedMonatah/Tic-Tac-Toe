@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import com.mycompany.tictactoe.App;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -33,15 +35,29 @@ public class Player1_vs_Ai_Hard_Controller implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        backButton.setOnMouseClicked(event -> {
+        try {
+            App.setRoot("ChoiceDifficulty");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    });
+    }
     
     @FXML
     private void handleBack(MouseEvent event) {
+        try {
+            App.setRoot("GameMode");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    private void btn(ActionEvent event) {
+    private void btn(ActionEvent event) throws IOException {
+        PlayerData.getInstance().setPlayerName(player1Input.getText());
+        PlayerData.getInstance().setDifficulty("Hard");
+        App.setRoot("AiGamePlay");
     }
 
 }

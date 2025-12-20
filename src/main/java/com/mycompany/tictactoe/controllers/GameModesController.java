@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import com.mycompany.tictactoe.App;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -30,7 +32,8 @@ public class GameModesController implements Initializable {
     }    
     
     @FXML
-    private void singlePlayerButton(ActionEvent event) {
+    private void singlePlayerButton(ActionEvent event) throws IOException {
+        App.setRoot("ChoiceDifficulty");
     }
 
     @FXML
