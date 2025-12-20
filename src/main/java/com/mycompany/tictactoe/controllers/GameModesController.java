@@ -32,7 +32,8 @@ public class GameModesController implements Initializable {
     }    
     
     @FXML
-    private void singlePlayerButton(ActionEvent event) {
+    private void singlePlayerButton(ActionEvent event) throws IOException {
+        App.setRoot("ChoiceDifficulty");
     }
 
     @FXML
