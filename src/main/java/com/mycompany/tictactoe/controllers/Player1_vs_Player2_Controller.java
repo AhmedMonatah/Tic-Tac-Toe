@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,19 +47,45 @@ public class Player1_vs_Player2_Controller implements Initializable {
     @FXML
     private void handleBack(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/mycompany/tictactoe/views/GameMode.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            App.setRoot("GameMode");
         } catch (IOException ex) {
             System.getLogger(Player1_vs_Player2_Controller.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            ex.printStackTrace();
         }
     }
 
     @FXML
     private void handleStartBattle(ActionEvent event) {
+        String player1;
+        String player2;
+        
+        if (player1Input.getText().isEmpty()) {
+            player1 = "Player 1";
+        } else {
+            player1 = player1Input.getText();
+        }
+
+        if (player2Input.getText().isEmpty()) {
+            player2 = "Player 2";
+        } else {
+            player2 = player2Input.getText();
+        }
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoe/views/GamePlay.fxml"));
+        
+        try {
+            Parent root = loader.load();
+            
+            GameplayController controller = loader.getController();
+
+            controller.initData(player1, player2);
+            
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (IOException ex) {
+            System.getLogger(Player1_vs_Player2_Controller.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+
     }
 
 }
