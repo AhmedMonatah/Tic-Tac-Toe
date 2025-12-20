@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mycompany.tictactoe.controllers.OnlineDialogController"
+      style="-fx-background-radius: 15;
+             -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+             #E40078 0%, #C800B0 40%, #7A3DF0 65%, #205CFC 100%);
+             -fx-padding: 20;">
+
+    <Label text="Online Connection"
+           style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <Label text="Enter Server IP and Port"
+           style="-fx-text-fill: #a2eafc; -fx-font-size: 16px;"/>
+
+    <Label text="IP:"
+           style="-fx-text-fill: white;"/>
+
+    <TextField fx:id="ipField"
+               promptText="IP Address"
+               style="-fx-background-radius: 5;
+                      -fx-border-radius: 5;
+                      -fx-border-color: #FBA3D6;"/>
+
+    <Label text="Port:"
+           style="-fx-text-fill: white;"/>
+
+    <TextField fx:id="portField"
+               promptText="Port"
+               style="-fx-background-radius: 5;
+                      -fx-border-radius: 5;
+                      -fx-border-color: #FBA3D6;"/>
+
+    <Button text="Connect"
+            fx:id="connectButton"
+            onAction="#onConnect"
+            style="-fx-background-color: #0078F4;
+                   -fx-text-fill: white;
+                   -fx-font-weight: bold;
+                   -fx-background-radius: 6;"/>
+
+    <Button text="Cancel"
+            onAction="#onCancel"
+            style="-fx-background-color: transparent;
+                   -fx-border-color: #FBA3D6;
+                   -fx-text-fill: white;
+                   -fx-background-radius: 6;"/>
+
+</VBox>
+
