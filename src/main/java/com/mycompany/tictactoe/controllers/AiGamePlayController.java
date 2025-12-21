@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -55,8 +56,6 @@ public class AiGamePlayController implements Initializable  {
     private Button btn12;
     @FXML
     private Button btn22;
-    private static final double CELL_SIZE = 90.0;
-    private static final double GAP_SIZE = 44.0;
     @FXML
     private AnchorPane lineOverlay;
     @Override
@@ -72,13 +71,21 @@ public class AiGamePlayController implements Initializable  {
     }
 
     @FXML
-    private void changeMode(ActionEvent event) throws IOException {
-        App.setRoot("GameMode");
+    private void changeMode(ActionEvent event){
+        try {
+            App.setRoot("GameMode");
+        } catch (IOException ex) {
+            System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     @FXML
-    private void logout(ActionEvent event) throws IOException {
-        App.setRoot("GameMode");
+    private void logout(ActionEvent event) {
+        try {
+            App.setRoot("GameMode");
+        } catch (IOException ex) {
+            System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     @FXML
@@ -187,65 +194,71 @@ public class AiGamePlayController implements Initializable  {
             lineOverlay.getChildren().clear();
         }
     }
-    
-private void drawWinningLine(char winner) {
-    clearWinningLine();
-    if (lineOverlay == null) {
-        System.out.println("lineOverlay is null!");
-        return;
-    }
-
-    char[][] board = game.getBoard();
-    Color lineColor = (winner == 'O')? Color.web("#f9a8d4"): Color.web("#67e8f9");
-
-    double offsetX = 248; 
-    double offsetY = 10;
-    for (int row = 0; row < 3; row++) {
-        if (board[0][row] == winner && board[1][row] == winner && board[2][row] == winner) {
-            double y = offsetY + (row * CELL_SIZE) + CELL_SIZE / 2 + 2;
-            Line line = createLine(offsetX + 30, y,offsetX + 3 * CELL_SIZE , y,lineColor);
-            lineOverlay.getChildren().add(line);
-            System.out.println("Row");
+    private void drawWinningLine(char winner) {
+        char[][] board = game.getBoard();
+        for (int row = 0; row < 3; row++) {
+            if (board[row][0] == winner && board[row][1] == winner && board[row][2] == winner) {
+                drawWinningLine("row", row);
+                return;
+            }
+        }
+        for (int col = 0; col < 3; col++) {
+            if (board[0][col] == winner && board[1][col] == winner && board[2][col] == winner) {
+                drawWinningLine("col", col);
+                return;
+            }
+        }
+        if (board[0][0] == winner && board[1][1] == winner && board[2][2] == winner) {
+            drawWinningLine("diag", 0);
             return;
         }
-    }
-    for (int col = 0; col < 3; col++) {
-        if (board[col][0] == winner && board[col][1] == winner && board[col][2] == winner) {
-            double x = offsetX + (col * CELL_SIZE) + GAP_SIZE * col + (20 * (2 - col));
-            Line line = createLine(x,offsetY + 15,
-                    x,offsetY + 3 * CELL_SIZE - 10,lineColor);
-            lineOverlay.getChildren().add(line);
-            return;
+        if (board[0][2] == winner && board[1][1] == winner &&board[2][0] == winner) {
+            drawWinningLine("diag", 1);
         }
     }
-    if (board[0][0] == winner && board[1][1] == winner && board[2][2] == winner) {
-        Line line = createLine(offsetX + 20 , offsetY + 30,
-                offsetX + 3 * CELL_SIZE + 10,offsetY + 3 * CELL_SIZE - 20,lineColor);
-        lineOverlay.getChildren().add(line);
-        System.out.println("1");
-        return;
-    }
+    private void drawWinningLine(String type, int index) {
+        lineOverlay.getChildren().clear();
+        Button startBtn = null;
+        Button endBtn = null;
+            switch (type) {
+                case "col":
+                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, index));
+                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, index));
+                    break;
+                case "row":
+                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",index, 0));
+                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", index, 2));
+                    break;
+                case "diag":
+                    if (index == 0) {
+                        startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",0, 0));
+                        endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, 2));
+                    } else {
+                        startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",2, 0));
+                        endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, 2));
+                    }       break;
+                default:
+                    break;
+            }
 
-    if (board[0][2] == winner && board[1][1] == winner && board[2][0] == winner) {
-        Line line = createLine(offsetX + 3 * CELL_SIZE + 10,offsetY + 20,
-                offsetX + 20,offsetY + 3 * CELL_SIZE - 15,lineColor);
-        lineOverlay.getChildren().add(line);
-    }
-}
+        if (startBtn == null || endBtn == null) return;
 
-    private Line createLine(double startX, double startY, double endX, double endY, Color color) {
-        Line line = new Line(startX, startY, endX, endY);
-        line.setStroke(color);
+        Bounds start = startBtn.localToScene(startBtn.getBoundsInLocal());
+        Bounds end = endBtn.localToScene(endBtn.getBoundsInLocal());
+        Bounds pane = lineOverlay.localToScene(lineOverlay.getBoundsInLocal());
+
+        Line line = new Line(
+            start.getCenterX() - pane.getMinX(),
+            start.getCenterY() - pane.getMinY(),
+            end.getCenterX() - pane.getMinX(),
+            end.getCenterY() - pane.getMinY()
+        );
+
         line.setStrokeWidth(8);
+        line.setStroke(Color.web("#fde047"));
         line.setStrokeLineCap(StrokeLineCap.ROUND);
-        line.setOpacity(0.9);
-        
-        DropShadow glow = new DropShadow();
-        glow.setColor(color);
-        glow.setRadius(15);
-        glow.setSpread(0.3);
-        line.setEffect(glow);
-        
-        return line;
+        line.setEffect(new DropShadow(12, Color.web("#fde047")));
+
+        lineOverlay.getChildren().add(line);
     }
 }
