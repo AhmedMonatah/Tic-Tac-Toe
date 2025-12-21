@@ -34,6 +34,21 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        client.setListener(msg -> {
+            if ("login_response".equals(msg.getAction())) {
+                javafx.application.Platform.runLater(() -> {
+                    if (msg.isSuccess()) {
+                        AppConfig.CURRENT_USER = msg.getUsername();
+                        showInfo("Login successful!");
+                        Stage stage = (Stage) username.getScene().getWindow();
+                        new AppRoute().goToUserListPage(stage);
+                    } else {
+                        showError(msg.getMessage());
+                    }
+                });
+            }
+        });
     }
 
     @FXML
@@ -52,37 +67,19 @@ public class LoginController implements Initializable {
 
     @FXML
     private void loginButton(ActionEvent event) {
-        if (client == null) {
-            showError("You must connect to the server first!");
-            return;
-        }
-
         String user = username.getText().trim();
         String pass = userPassword.getText().trim();
 
-        if(user.isEmpty() || pass.isEmpty()) {
-            showError("Please fill all fields");
-            return;
-        }
+        if (user.isEmpty() || pass.isEmpty()) { showError("Please fill all fields"); return; }
 
-        Message msg = new Message();
-        msg.setAction("login");
-        msg.setUsername(user);
-        msg.setPassword(pass);
-
-        client.sendMessage(msg);
-
-        Message response = client.receiveMessage();
-        if(response != null && "login_response".equals(response.getAction())) {
-            if(response.isSuccess()) {
-                showInfo("Login successful!");
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                new AppRoute().goToUserListPage(stage);
+        if (!client.isConnected()) {
+            if (client.connect("localhost", 1527)) {
+                initialize(null, null); 
             } else {
-                showError(response.getMessage());
+                showError("Server is down"); return;
             }
-        } else {
-            showError("No response from server");
         }
+        client.sendMessage(new Message("login", user, pass));
     }
+
 }

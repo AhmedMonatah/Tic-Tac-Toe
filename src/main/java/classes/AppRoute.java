@@ -33,4 +33,12 @@ public void goToUserListPage(Stage stage) {
         e.printStackTrace();
     }
 }
+    public void goToStartPage(Stage stage) {
+    try {
+        Parent root = FXMLLoader.load(getClass().getResource("/com/mycompany/tictactoe/views/GameMode.fxml"));
+        stage.getScene().setRoot(root); 
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 }

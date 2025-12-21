@@ -32,55 +32,59 @@ public class RegisterViewController implements Initializable {
     private PasswordField passwordField;
     @FXML
     private PasswordField confirmpass;
-   private NetworkClient client = AppConfig.CLIENT;
+    private NetworkClient client = AppConfig.CLIENT;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {}
+    public void initialize(URL url, ResourceBundle rb) {
+
+        client.setListener(msg -> {
+            if ("register_response".equals(msg.getAction())) {
+                javafx.application.Platform.runLater(() -> {
+                    if (msg.isSuccess()) {
+                        showInfo("Registered successfully!");
+                        Stage stage = (Stage) username.getScene().getWindow();
+                        new AppRoute().goToLoginPage(stage);
+                    } else {
+                        showError(msg.getMessage());
+                    }
+                });
+            }
+        });
+    }
 
     @FXML
     private void toLoginPage(MouseEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        new AppRoute().goToLoginPage(stage); 
-    }
-@FXML
-private void onRegister(ActionEvent event) {
-    if (client == null) {
-        showError("You must connect to the server first!");
-        return;
+        new AppRoute().goToLoginPage(stage);
     }
 
-    String user = username.getText().trim();
-    String pass = passwordField.getText().trim();
-    String confirm = confirmpass.getText().trim();
+    @FXML
+    private void onRegister(ActionEvent event) {
+        String user = username.getText().trim();
+        String pass = passwordField.getText().trim();
+        String confirm = confirmpass.getText().trim();
 
-    if(user.isEmpty() || pass.isEmpty()) {
-        showError("Please fill all fields");
-        return;
-    }
-
-    if(!pass.equals(confirm)) {
-        showError("Passwords do not match");
-        return;
-    }
-
-    Message msg = new Message();
-    msg.setAction("register");
-    msg.setUsername(user);
-    msg.setPassword(pass);
-
-    client.sendMessage(msg);
-
-    Message response = client.receiveMessage();
-    if(response != null && response.getAction().equals("register_response")) {
-        if(response.isSuccess()) {
-            showInfo("Registered successfully!");
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            new AppRoute().goToLoginPage(stage);
-        } else {
-            showError(response.getMessage());
+        if (user.isEmpty() || pass.isEmpty()) {
+            showError("Please fill all fields");
+            return;
         }
-    } else {
-        showError("No response from server");
+        if (!pass.equals(confirm)) {
+            showError("Passwords do not match");
+            return;
+        }
+
+        if (!client.isConnected()) {
+            if (client.connect("localhost", 1527)) {
+                initialize(null, null);
+            } else {
+                showError("Server is down");
+                return;
+            }
+        }
+        Message msg = new Message();
+        msg.setAction("register");
+        msg.setUsername(user);
+        msg.setPassword(pass);
+        client.sendMessage(msg);
     }
-}
 }

@@ -1,11 +1,22 @@
 package classes;
 
+import org.json.JSONObject;
+
 public class Message {
     private String action;
-    private String username;  
-    private String password;   
-    private boolean success;   
-    private String message;   
+    private String username;
+    private String password;
+    private boolean success;
+    private String message;
+
+    private JSONObject rawJson; 
+
+    public JSONObject getRawJson() {
+        return rawJson;
+    }
+    public void setRawJson(JSONObject rawJson) {
+        this.rawJson = rawJson;
+    }
 
     public Message() { }
 
