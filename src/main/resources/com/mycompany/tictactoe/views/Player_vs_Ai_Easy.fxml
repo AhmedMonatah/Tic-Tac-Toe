@@ -16,16 +16,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #db2777, #9333ea, #2563eb);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.Player1_vs_Ai_Easy_Controller">
     <children>
-        <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42" prefWidth="42" style="-fx-background-color: tranparent; -fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
-            <graphic>
-                <ImageView fitHeight="26" fitWidth="26" onMouseClicked="#handleBack" preserveRatio="true" style="-fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
-                    <image>
-                        <Image url="@../../../../images/back.png" />
-                    </image>
-                </ImageView>
-            </graphic>
-
-        </Button>
 
 
         <VBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -143,28 +133,22 @@
                             </effect>
                         </CheckBox>
 
-                        <Button text="START BATTLE"
-                                mnemonicParsing="false"
-                                prefWidth="250"
-                                prefHeight="60"
-                                style="-fx-background-color: linear-gradient(to right, #ec4899, #9333ea); 
-                       -fx-text-fill: white; 
-                       -fx-font-size: 24px; 
-                       -fx-font-weight: bold; 
-                       -fx-background-radius: 30; 
-                       -fx-border-radius: 30; 
-                       -fx-border-color: white; 
-                       -fx-border-width: 2; 
-                       -fx-cursor: hand; 
-                       -fx-padding: 0; 
-                       -fx-alignment: CENTER; 
-                       -fx-content-display: CENTER;" 
-                        />
+                        <Button mnemonicParsing="false" onAction="#btn" prefHeight="60" prefWidth="250" style="-fx-background-color: linear-gradient(to right, #ec4899, #9333ea);                         -fx-text-fill: white;                         -fx-font-size: 24px;                         -fx-font-weight: bold;                         -fx-background-radius: 30;                         -fx-border-radius: 30;                         -fx-border-color: white;                         -fx-border-width: 2;                         -fx-cursor: hand;                         -fx-padding: 0;                         -fx-alignment: CENTER;                         -fx-content-display: CENTER;" text="START BATTLE" />
 
                     </children>
                 </VBox>
 
             </children>
         </VBox>
+        <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42" prefWidth="42" style="-fx-background-color: tranparent; -fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
+            <graphic>
+                <ImageView fitHeight="26" fitWidth="26" onMouseClicked="#handleBack" preserveRatio="true" style="-fx-cursor: hand;" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
+                    <image>
+                        <Image url="@../../../../images/back.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+
+        </Button>
     </children>
 </AnchorPane>

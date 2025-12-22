@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -61,9 +62,6 @@ public class LoginController implements Initializable {
     private void usernameTextField(ActionEvent event) {
     }
 
-    @FXML
-    private void userPasswordTextField(ActionEvent event) {
-    }
 
     @FXML
     private void loginButton(ActionEvent event) {
@@ -80,6 +78,10 @@ public class LoginController implements Initializable {
             }
         }
         client.sendMessage(new Message("login", user, pass));
+    }
+
+    @FXML
+    private void userPassword(ActionEvent event) {
     }
 
 }

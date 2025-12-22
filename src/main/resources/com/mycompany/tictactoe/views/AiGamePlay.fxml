@@ -8,13 +8,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #db2777, #9333ea, #2563eb);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.GameplayController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #db2777, #9333ea, #2563eb);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.AiGamePlayController">
    <children>
       <VBox alignment="CENTER" layoutX="50.0" layoutY="20.0" prefHeight="560.0" prefWidth="800.0" spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
          <children>
@@ -37,7 +36,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="title" text="You vs AI" textFill="#cffafe">
+                  <Label fx:id="title" text="AI" textFill="#cffafe">
                       <font><Font size="14.0" /></font>
                    </Label>
                </children>
@@ -98,15 +97,15 @@
                         <DropShadow color="#ffffff4d" height="40.0" radius="20.0" width="40.0" />
                      </effect>
                      <children>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn00" prefHeight="75" prefWidth="75" style="         -fx-background-color: transparent;         -fx-border-color: rgba(255,255,255,0.4);         -fx-border-width: 1;         -fx-border-radius: 6;          -fx-background-insets: 0;         -fx-border-insets: 0;         -fx-padding: 0;          -fx-font-size: 38;         -fx-font-weight: bold;         -fx-text-fill: #67e8f9;          -fx-focus-color: transparent;         -fx-faint-focus-color: transparent;     " text="X" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <Button fx:id="btn00" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleMove" prefHeight="75" prefWidth="75" style="         -fx-background-color: transparent;         -fx-border-color: rgba(255,255,255,0.4);         -fx-border-width: 1;         -fx-border-radius: 6;          -fx-background-insets: 0;         -fx-border-insets: 0;         -fx-padding: 0;          -fx-font-size: 38;         -fx-font-weight: bold;         -fx-text-fill: #67e8f9;          -fx-focus-color: transparent;         -fx-faint-focus-color: transparent;     " GridPane.columnIndex="0" GridPane.rowIndex="0">
           <effect>
               <DropShadow color="#67e8f9" radius="5" />
           </effect>
       </Button>
-                   <Button mnemonicParsing="false" onAction="#btn10" prefHeight="75.0" prefWidth="75.0" style=" -fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#btn20" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" />
-                        <Button mnemonicParsing="false" onAction="#btn01" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.rowIndex="1" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn11" prefHeight="75.0" prefWidth="75.0" style=" -fx-background-color: transparent; -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6; -fx-background-insets: 0;-fx-border-insets: 0; -fx-padding: 0; -fx-font-size: 38; -fx-font-weight: bold; -fx-font-family: 'Arial';-fx-text-fill: #f9a8d4;-fx-focus-color: transparent;  -fx-faint-focus-color: transparent; -fx-cursor: hand;" text="O" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                   <Button fx:id="btn10" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style=" -fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="1" />
+                        <Button fx:id="btn20" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" />
+                        <Button fx:id="btn01" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.rowIndex="1" />
+                        <Button fx:id="btn11" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style=" -fx-background-color: transparent; -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6; -fx-background-insets: 0;-fx-border-insets: 0; -fx-padding: 0; -fx-font-size: 38; -fx-font-weight: bold; -fx-font-family: 'Arial';-fx-text-fill: #f9a8d4;-fx-focus-color: transparent;  -fx-faint-focus-color: transparent; -fx-cursor: hand;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                              <effect>
                               <DropShadow color="#f9a8d4" radius="5" />
                            </effect>
@@ -114,16 +113,15 @@
                               <Font size="38.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#btn21" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#btn02" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.rowIndex="2" />
-                        <Button mnemonicParsing="false" onAction="#btn12" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button mnemonicParsing="false" onAction="#btn22" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Button fx:id="btn21" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Button fx:id="btn02" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.rowIndex="2" />
+                        <Button fx:id="btn12" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="btn22" mnemonicParsing="false" onAction="#handleMove" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
-                  <Pane fx:id="winningLinePane" maxHeight="350.0" maxWidth="350.0" mouseTransparent="true" pickOnBounds="false" prefHeight="295.0" prefWidth="295.0" />
+                  <AnchorPane fx:id="lineOverlay" mouseTransparent="true" prefHeight="295.0" prefWidth="295.0" style="-fx-background-color: transparent;" />
                </children>
             </StackPane>
-
             <!-- Bottom Buttons -->
             <HBox alignment="CENTER" spacing="15.0">
                <children>

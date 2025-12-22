@@ -6,6 +6,7 @@ package com.mycompany.tictactoe.controllers;
 
 import classes.AppConfig;
 import classes.AppRoute;
+import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -46,11 +47,18 @@ public class GameModesController implements Initializable {
     }    
     
     @FXML
-    private void singlePlayerButton(ActionEvent event) {
+    private void singlePlayerButton(ActionEvent event) throws IOException {
+        App.setRoot("ChoiceDifficulty");
     }
 
     @FXML
     private void s2PlayersButton(ActionEvent event) {
+        try {
+            App.setRoot("Player1_vs_Player2");
+        } catch (IOException ex) {
+            System.getLogger(GameModesController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }
     @FXML
     private void onlineButton(ActionEvent event) throws IOException {
