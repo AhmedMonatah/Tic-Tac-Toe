@@ -1,29 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.tictactoe.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import static classes.AlertUtils.showError;
+import static classes.AlertUtils.showInfo;
+import classes.AppConfig;
+import classes.AppRoute;
+import classes.Message;
+import classes.NetworkClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author LENOVO
- */
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class LoginController implements Initializable {
-
 
     @FXML
     private TextField username;
@@ -33,14 +30,34 @@ public class LoginController implements Initializable {
     private Button loginButton;
     @FXML
     private Text registerPage;
-    /**
-     * Initializes the controller class.
-     */
+
+    private NetworkClient client = AppConfig.CLIENT;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+
+        client.setListener(msg -> {
+            if ("login_response".equals(msg.getAction())) {
+                javafx.application.Platform.runLater(() -> {
+                    if (msg.isSuccess()) {
+                        AppConfig.CURRENT_USER = msg.getUsername();
+                        showInfo("Login successful!");
+                        Stage stage = (Stage) username.getScene().getWindow();
+                        new AppRoute().goToUserListPage(stage);
+                    } else {
+                        showError(msg.getMessage());
+                    }
+                });
+            }
+        });
+    }
+
+    @FXML
+    private void toRegisterPage(MouseEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        new AppRoute().goToRegisterPage(stage);
+    }
+
     @FXML
     private void usernameTextField(ActionEvent event) {
     }
@@ -48,10 +65,19 @@ public class LoginController implements Initializable {
 
     @FXML
     private void loginButton(ActionEvent event) {
-    }
+        String user = username.getText().trim();
+        String pass = userPassword.getText().trim();
 
-    @FXML
-    private void toRegisterPage(MouseEvent event) {
+        if (user.isEmpty() || pass.isEmpty()) { showError("Please fill all fields"); return; }
+
+        if (!client.isConnected()) {
+            if (client.connect("localhost", 1527)) {
+                initialize(null, null); 
+            } else {
+                showError("Server is down"); return;
+            }
+        }
+        client.sendMessage(new Message("login", user, pass));
     }
 
     @FXML

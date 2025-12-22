@@ -114,21 +114,6 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#logoutButton" prefHeight="45.0" prefWidth="360.0" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #FBA3D6;" text="Logout" textFill="WHITE">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="15.0" top="15.0" />
-                     </VBox.margin>
-                     <graphic>
-                        <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/logout.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
                </children>
             </VBox>
          </children>
