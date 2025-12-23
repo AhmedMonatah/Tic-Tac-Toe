@@ -13,6 +13,13 @@ public class AppConfig {
     public static int SERVER_PORT;
     public static NetworkClient CLIENT; 
     public static String CURRENT_USER;
+    
+    // Online Game State
+    public static boolean IS_ONLINE = false;
+    public static String OPPONENT = "";
+    public static boolean AM_I_X = false; // Player 1 is X, Player 2 is O
+    
+    
     public static String getServerIp() {
         return SERVER_IP;
     }
