@@ -6,6 +6,8 @@ import classes.AppRoute;
 import classes.NetworkClient;
 import classes.Message;
 import classes.MessageListener;
+import com.mycompany.tictactoe.App;
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -154,34 +156,62 @@ public class Users_listController implements Initializable {
                 if (result.get() == acceptButton) {
                     req.put("response", "accept");
                     System.out.println("Accepted game request from " + fromUser);
+                    
+                    AppConfig.IS_ONLINE = true;
+                    AppConfig.OPPONENT = fromUser;
+                    AppConfig.AM_I_X = false;
+                    try {
+                        App.setRoot("GamePlay");
+                    } catch (IOException ex) {
+                        System.getLogger(Users_listController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                    
+                    
                 } else if (result.get() == declineButton) {
                     req.put("response", "decline");
                     System.out.println("Declined game request from " + fromUser);
                 }
             }
-            req.put("action", "request_resonse");
+            req.put("action", "request_response");
             req.put("from", AppConfig.CURRENT_USER);
-            req.put("to", toUser);
+            req.put("to", fromUser);
             client.sendRaw(req.toString());
 
         }
         
     }
-
+    
     private void RequestResponse(Message msg) {
-        JSONObject json = msg.getRawJson();
-        String fromUser = json.getString("from");
-        String toUser = json.getString("to");
-        String response = json.getString("response");
-        if(AppConfig.CURRENT_USER == null ? toUser == null : AppConfig.CURRENT_USER.equals(fromUser)){
-            if (response.equals("decline")) {
-                showInfo("User "+ toUser + " decline your request");
-            }else{
-                showInfo("User "+ toUser + " Accept your request");
-            }
-            
-        }  
+    JSONObject json = msg.getRawJson();
+    String fromUser = json.getString("from");
+    String toUser = json.getString("to");
+    String response = json.getString("response");
+
+    System.out.println("DEBUG: I am [" + AppConfig.CURRENT_USER + "], Message is to [" + toUser + "]");
+
+    if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.trim().equals(toUser.trim())) {
+        if ("accept".equals(response)) {
+            AppConfig.IS_ONLINE = true;
+            AppConfig.OPPONENT = fromUser;
+            AppConfig.AM_I_X = true;
+
+            Platform.runLater(() -> {
+                try {
+                    System.out.println("Transitioning to GamePlay for: " + AppConfig.CURRENT_USER);
+                    App.setRoot("GamePlay");
+                } catch (IOException ex) {
+                    System.err.println("Failed to load GamePlay screen: " + ex.getMessage());
+                }
+            });
+        } else if ("decline".equals(response)) {
+            Platform.runLater(() -> showInfo("User " + fromUser + " declined your request"));
+        }
+    } else {
+        System.out.println("DEBUG: Condition failed. Current user doesn't match toUser.");
     }
+}
+    
+    
   @FXML
 private void BackToMenu() {
     try {
