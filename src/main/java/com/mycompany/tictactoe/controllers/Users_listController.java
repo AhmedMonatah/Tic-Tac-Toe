@@ -1,5 +1,6 @@
 package com.mycompany.tictactoe.controllers;
 
+import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.AppRoute;
 import classes.NetworkClient;
@@ -25,7 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class Users_listController implements Initializable {
 
@@ -42,7 +47,6 @@ public class Users_listController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         client.setListener(new MessageListener() {
             @Override
             public void onMessage(Message msg) {
@@ -51,8 +55,11 @@ public class Users_listController implements Initializable {
                         Platform.runLater(() -> updateUsersList(msg));
                         break;
 
-                    case "game_request":
+                    case "show_game_request":
                         Platform.runLater(() -> showGameRequest(msg));
+                        break;
+                    case "request_response":
+                            Platform.runLater(()-> RequestResponse(msg));
                         break;
                 }
             }
@@ -120,15 +127,61 @@ public class Users_listController implements Initializable {
         req.put("action", "game_request");
         req.put("from", AppConfig.CURRENT_USER);
         req.put("to", toUser);
+        
+        System.out.println("Game request from: " + AppConfig.CURRENT_USER);
         client.sendRaw(req.toString());
     }
 
     private void showGameRequest(Message msg) {
         JSONObject json = msg.getRawJson();
-        String fromUser = json.optString("from");
-        System.out.println("Game request from: " + fromUser);
+        String fromUser = json.getString("from");
+        String toUser = json.getString("to");
+        System.out.println("Game request to: " + toUser);
+        if(AppConfig.CURRENT_USER == null ? toUser == null : AppConfig.CURRENT_USER.equals(toUser)){
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Game Request");
+            alert.setHeaderText("Game Invitation");
+            alert.setContentText(fromUser + " wants to play Tic-Tac-Toe with you!\nDo you accept the challenge?");
+
+            ButtonType acceptButton = new ButtonType("Accept");
+            ButtonType declineButton = new ButtonType("Decline");
+
+            alert.getButtonTypes().setAll(acceptButton, declineButton);
+            Optional<ButtonType> result = alert.showAndWait();
+            JSONObject req = new JSONObject();
+            
+            if (result.isPresent()) {
+                if (result.get() == acceptButton) {
+                    req.put("response", "accept");
+                    System.out.println("Accepted game request from " + fromUser);
+                } else if (result.get() == declineButton) {
+                    req.put("response", "decline");
+                    System.out.println("Declined game request from " + fromUser);
+                }
+            }
+            req.put("action", "request_resonse");
+            req.put("from", AppConfig.CURRENT_USER);
+            req.put("to", toUser);
+            client.sendRaw(req.toString());
+
+        }
+        
     }
 
+    private void RequestResponse(Message msg) {
+        JSONObject json = msg.getRawJson();
+        String fromUser = json.getString("from");
+        String toUser = json.getString("to");
+        String response = json.getString("response");
+        if(AppConfig.CURRENT_USER == null ? toUser == null : AppConfig.CURRENT_USER.equals(fromUser)){
+            if (response.equals("decline")) {
+                showInfo("User "+ toUser + " decline your request");
+            }else{
+                showInfo("User "+ toUser + " Accept your request");
+            }
+            
+        }  
+    }
   @FXML
 private void BackToMenu() {
     try {
