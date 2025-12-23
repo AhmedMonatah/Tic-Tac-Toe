@@ -32,6 +32,7 @@ public class AppConfig {
        return CURRENT_USER; 
     }
     public static void setCurrentUser(String currentUser) { 
-        CURRENT_USER = currentUser; 
+        CURRENT_USER = currentUser;
+        System.out.println("Set CURREN_USER: "+ CURRENT_USER);
     }
 }

@@ -40,7 +40,7 @@ public class LoginController implements Initializable {
             if ("login_response".equals(msg.getAction())) {
                 javafx.application.Platform.runLater(() -> {
                     if (msg.isSuccess()) {
-                        AppConfig.CURRENT_USER = msg.getUsername();
+                        AppConfig.setCurrentUser(msg.getUsername());
                         showInfo("Login successful!");
                         Stage stage = (Stage) username.getScene().getWindow();
                         new AppRoute().goToUserListPage(stage);
@@ -67,7 +67,7 @@ public class LoginController implements Initializable {
     private void loginButton(ActionEvent event) {
         String user = username.getText().trim();
         String pass = userPassword.getText().trim();
-
+        
         if (user.isEmpty() || pass.isEmpty()) { showError("Please fill all fields"); return; }
 
         if (!client.isConnected()) {
@@ -78,6 +78,7 @@ public class LoginController implements Initializable {
             }
         }
         client.sendMessage(new Message("login", user, pass));
+        
     }
 
     @FXML

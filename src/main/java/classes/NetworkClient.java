@@ -43,7 +43,7 @@ public class NetworkClient {
                     Message msg = new Message();
                     msg.setAction(json.optString("action"));
                     msg.setSuccess(json.optBoolean("success"));
-                    msg.setMessage(json.optString("message"));
+                    msg.setUsername(json.optString("username"));
                     msg.setRawJson(json);
 
                     if (listener != null) {
