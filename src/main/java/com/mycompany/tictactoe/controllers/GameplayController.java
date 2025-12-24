@@ -119,7 +119,7 @@ public class GameplayController implements Initializable {
             
         } else {
             // 2 local players
-            if (gameModel.isPlayer1Turn()) {
+            if (!gameModel.isPlayer1Turn()) {
                 title.setText(player1.getText() + "'s Turn (X)");
             } else {
                 title.setText(player2.getText() + "'s Turn (O)");
@@ -172,7 +172,9 @@ public class GameplayController implements Initializable {
                 if (info != null) {
                     drawWinningLine(info.type, info.index);
                 }
-
+                
+                    
+                    
                 if (gameModel.isPlayer1Turn()) {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
                     title.setText(player1.getText() + " Wins!");

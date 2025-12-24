@@ -30,15 +30,7 @@
                       -fx-border-radius: 5;
                       -fx-border-color: #FBA3D6;"/>
 
-    <Label text="Port:"
-           style="-fx-text-fill: white;"/>
-
-    <TextField fx:id="portField"
-               promptText="Port"
-               style="-fx-background-radius: 5;
-                      -fx-border-radius: 5;
-                      -fx-border-color: #FBA3D6;"/>
-
+ 
     <Button text="Connect"
             fx:id="connectButton"
             onAction="#onConnect"

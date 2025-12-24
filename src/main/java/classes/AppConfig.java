@@ -10,14 +10,13 @@ package classes;
  */
 public class AppConfig {
     public static String SERVER_IP;
-    public static int SERVER_PORT;
     public static NetworkClient CLIENT; 
     public static String CURRENT_USER;
     
     // Online Game State
     public static boolean IS_ONLINE = false;
     public static String OPPONENT = "";
-    public static boolean AM_I_X = false; // Player 1 is X, Player 2 is O
+    public static boolean AM_I_X = false; 
     
     
     public static String getServerIp() {
@@ -26,14 +25,6 @@ public class AppConfig {
 
     public static void setServerIp(String serverIp) {
         SERVER_IP = serverIp;
-    }
-
-    public static int getServerPort() {
-        return SERVER_PORT;
-    }
-
-    public static void setServerPort(int serverPort) {
-        SERVER_PORT = serverPort;
     }
     public static String getCurrentUser() { 
        return CURRENT_USER; 

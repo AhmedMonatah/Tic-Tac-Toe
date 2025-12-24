@@ -47,8 +47,8 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="80.0" style="-fx-border-color: #f9a8d4; -fx-border-radius: 12; -fx-border-width: 2; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12;">
                      <children>
-                        <Label fx:id="player1" text="You" textFill="#f9a8d4"><font><Font name="System Bold" size="12.0" /></font></Label>
-                        <Label fx:id="playerScore" text="0" textFill="WHITE"><font><Font name="System Bold" size="18.0" /></font></Label>
+                        <Label fx:id="player2" text="Ai" textFill="#f9a8d4"><font><Font name="System Bold" size="12.0" /></font></Label>
+                        <Label fx:id="aiScore" text="0" textFill="WHITE"><font><Font name="System Bold" size="18.0" /></font></Label>
                         <Label text="O" textFill="#f9a8d4"><font><Font name="System Bold" size="14.0" /></font></Label>
                      </children>
                      <effect><DropShadow color="#f9a8d466" radius="8.0" /></effect>
@@ -64,8 +64,8 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="70.0" prefWidth="80.0" style="-fx-border-color: #67e8f9; -fx-border-radius: 12; -fx-border-width: 2; -fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12;">
                      <children>
-                        <Label fx:id="player2" text="AI" textFill="#67e8f9"><font><Font name="System Bold" size="12.0" /></font></Label>
-                        <Label fx:id="aiScore" text="0" textFill="WHITE"><font><Font name="System Bold" size="18.0" /></font></Label>
+                        <Label fx:id="player1" text="You" textFill="#67e8f9"><font><Font name="System Bold" size="12.0" /></font></Label>
+                        <Label fx:id="playerScore" text="0" textFill="WHITE"><font><Font name="System Bold" size="18.0" /></font></Label>
                         <Label text="X" textFill="#67e8f9"><font><Font name="System Bold" size="14.0" /></font></Label>
                      </children>
                      <effect><DropShadow color="#67e8f966" radius="8.0" /></effect>
