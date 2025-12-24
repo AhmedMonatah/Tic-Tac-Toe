@@ -5,6 +5,10 @@
 package com.mycompany.tictactoe.controllers;
 
 import com.mycompany.tictactoe.App;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
-
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
@@ -22,7 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
-public class AiGamePlayController implements Initializable  {
+public class AiGamePlayController implements Initializable {
+
     @FXML
     private Label playerScore;
     @FXML
@@ -37,7 +41,7 @@ public class AiGamePlayController implements Initializable  {
     private Label player1;
     @FXML
     private Label player2;
-    PlayvsAi game = new PlayvsAi(PlayerData.getInstance().getDifficulty(),'O');
+    PlayvsAi game = new PlayvsAi(PlayerData.getInstance().getDifficulty(), 'O');
     @FXML
     private Button btn00;
     @FXML
@@ -58,20 +62,29 @@ public class AiGamePlayController implements Initializable  {
     private Button btn22;
     @FXML
     private AnchorPane lineOverlay;
+    FileOutputStream fos = null;
+    DataOutputStream dos = null;
+    File testFile = null;
+    boolean isRecording = false;
+    private File gameFile;
+    private boolean isCreated = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         title.setText(PlayerData.getInstance().getPlayerName() + " vs AI");
-    }    
+    }
 
     @FXML
     private void newRound(ActionEvent event) {
         game.resetBoard();
         clearAllButtons();
         clearWinningLine();
+        isCreated=false;
+
     }
 
     @FXML
-    private void changeMode(ActionEvent event){
+    private void changeMode(ActionEvent event) {
         try {
             App.setRoot("GameMode");
         } catch (IOException ex) {
@@ -96,82 +109,103 @@ public class AiGamePlayController implements Initializable  {
         }
         clickedButton.setText("O");
         clickedButton.setStyle(
-            "-fx-background-color: transparent;" +
-            "-fx-border-color: rgba(255,255,255,0.4);" +
-            "-fx-border-width: 1;" +
-            "-fx-border-radius: 6;" +
-            "-fx-background-radius: 6;" +
-            "-fx-padding: 0;" +
-            "-fx-font-size: 38px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-font-family: Arial;" +
-            "-fx-text-fill: #f9a8d4;" +
-            "-fx-focus-color: transparent;" +
-            "-fx-faint-focus-color: transparent;"
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: rgba(255,255,255,0.4);"
+                + "-fx-border-width: 1;"
+                + "-fx-border-radius: 6;"
+                + "-fx-background-radius: 6;"
+                + "-fx-padding: 0;"
+                + "-fx-font-size: 38px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-font-family: Arial;"
+                + "-fx-text-fill: #f9a8d4;"
+                + "-fx-focus-color: transparent;"
+                + "-fx-faint-focus-color: transparent;"
         );
         clickedButton.setFocusTraversable(false);
- 
+
         String btn = clickedButton.getId();
+        savedFile();
+        recordMove(btn, "Player");
         System.out.println(btn);
-        game.makeMove(btn.charAt(3)-'0', btn.charAt(4)-'0', 'O');
-        if(!CheckWin('O')){
+        game.makeMove(btn.charAt(3) - '0', btn.charAt(4) - '0', 'O');
+        
+        if (!CheckWin('O')) {
             AiMove();
         }
-    }   
-    private void AiMove(){
-        int[] index = game.getAiMove();
-            String buttonId = String.format("#btn%d%d", index[0], index[1]);
-            Button aiButton = (Button) gameGrid.lookup(buttonId);
-            game.makeMove(index[0], index[1], 'X');
-            if (aiButton != null) {
-                aiButton.setText("X");
-                aiButton.setStyle(
-                    "-fx-background-color: transparent;"+
-                    "-fx-border-color: rgba(255,255,255,0.4);" +
-                    "-fx-border-width: 1;" +
-                    "-fx-border-radius: 6;" +
-                    "-fx-background-radius: 6;" +
-                    "-fx-padding: 0;" +
-                    "-fx-font-size: 38px;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-font-family: Arial;" +
-                    "-fx-text-fill: #67e8f9;" +
-                    "-fx-focus-color: transparent;" +
-                    "-fx-faint-focus-color: transparent;"
-                );
-                aiButton.setFocusTraversable(false);
-                CheckWin('X');
-            } else {
-                System.out.println("Button not found: " + buttonId);
-                CheckWin('X');
-            }
     }
-    private boolean CheckWin(char ch){
-        if(game.checkWin(ch)){
-            if(ch == 'O'){
+
+    private void AiMove() {
+        int[] index = game.getAiMove();
+        String buttonId = String.format("#btn%d%d", index[0], index[1]);
+        Button aiButton = (Button) gameGrid.lookup(buttonId);
+        game.makeMove(index[0], index[1], 'X');
+        savedFile();
+        recordMove(buttonId, "AI");
+        if (aiButton != null) {
+            aiButton.setText("X");
+            aiButton.setStyle(
+                    "-fx-background-color: transparent;"
+                    + "-fx-border-color: rgba(255,255,255,0.4);"
+                    + "-fx-border-width: 1;"
+                    + "-fx-border-radius: 6;"
+                    + "-fx-background-radius: 6;"
+                    + "-fx-padding: 0;"
+                    + "-fx-font-size: 38px;"
+                    + "-fx-font-weight: bold;"
+                    + "-fx-font-family: Arial;"
+                    + "-fx-text-fill: #67e8f9;"
+                    + "-fx-focus-color: transparent;"
+                    + "-fx-faint-focus-color: transparent;"
+            );
+            aiButton.setFocusTraversable(false);
+            CheckWin('X');
+        } else {
+            System.out.println("Button not found: " + buttonId);
+            CheckWin('X');
+        }
+    }
+
+    private boolean CheckWin(char ch) {
+        if (game.checkWin(ch)) {
+            if (ch == 'O') {
                 game.incrementHumanScore();
                 playerScore.setText(Integer.toString(game.getHumanScore()));
                 drawWinningLine('O');
+                try {
+                    dos.writeBytes("=======You won=======");
+                } catch (IOException ex) {
+                    System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
                 disableAllButtons();
                 return true;
-            }else{
+            } else {
                 game.incrementAiScore();
                 aiScore.setText(Integer.toString(game.getAiScore()));
                 drawWinningLine('X');
+                try {
+                    dos.writeBytes("=======Ai won=======");
+                } catch (IOException ex) {
+                    System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
                 disableAllButtons();
                 return false;
             }
-        }
-        else if(game.isBoardFull()){
+        } else if (game.isBoardFull()) {
             game.incrementDrawScore();
             drawScore.setText(Integer.toString(game.getDrawScore()));
+            try{
+                    dos.writeBytes("=======Draw=======");
+                } catch (IOException ex) {
+                    System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
             System.out.println("incremented");
             disableAllButtons();
             return true;
         }
         return false;
     }
-    
+
     private void clearAllButtons() {
         for (javafx.scene.Node node : gameGrid.getChildren()) {
             if (node instanceof Button) {
@@ -181,19 +215,21 @@ public class AiGamePlayController implements Initializable  {
             }
         }
     }
-     private void disableAllButtons() {
+
+    private void disableAllButtons() {
         for (javafx.scene.Node node : gameGrid.getChildren()) {
             if (node instanceof Button) {
                 node.setDisable(true);
             }
         }
     }
-       
+
     private void clearWinningLine() {
         if (lineOverlay != null) {
             lineOverlay.getChildren().clear();
         }
     }
+
     private void drawWinningLine(char winner) {
         char[][] board = game.getBoard();
         for (int row = 0; row < 3; row++) {
@@ -212,46 +248,50 @@ public class AiGamePlayController implements Initializable  {
             drawWinningLine("diag", 0);
             return;
         }
-        if (board[0][2] == winner && board[1][1] == winner &&board[2][0] == winner) {
+        if (board[0][2] == winner && board[1][1] == winner && board[2][0] == winner) {
             drawWinningLine("diag", 1);
         }
     }
+
     private void drawWinningLine(String type, int index) {
         lineOverlay.getChildren().clear();
         Button startBtn = null;
         Button endBtn = null;
-            switch (type) {
-                case "col":
-                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, index));
-                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, index));
-                    break;
-                case "row":
-                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",index, 0));
-                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", index, 2));
-                    break;
-                case "diag":
-                    if (index == 0) {
-                        startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",0, 0));
-                        endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, 2));
-                    } else {
-                        startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d",2, 0));
-                        endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, 2));
-                    }       break;
-                default:
-                    break;
-            }
+        switch (type) {
+            case "col":
+                startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, index));
+                endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, index));
+                break;
+            case "row":
+                startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", index, 0));
+                endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", index, 2));
+                break;
+            case "diag":
+                if (index == 0) {
+                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, 0));
+                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, 2));
+                } else {
+                    startBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 2, 0));
+                    endBtn = (Button) gameGrid.lookup(String.format("#btn%d%d", 0, 2));
+                }
+                break;
+            default:
+                break;
+        }
 
-        if (startBtn == null || endBtn == null) return;
+        if (startBtn == null || endBtn == null) {
+            return;
+        }
 
         Bounds start = startBtn.localToScene(startBtn.getBoundsInLocal());
         Bounds end = endBtn.localToScene(endBtn.getBoundsInLocal());
         Bounds pane = lineOverlay.localToScene(lineOverlay.getBoundsInLocal());
 
         Line line = new Line(
-            start.getCenterX() - pane.getMinX(),
-            start.getCenterY() - pane.getMinY(),
-            end.getCenterX() - pane.getMinX(),
-            end.getCenterY() - pane.getMinY()
+                start.getCenterX() - pane.getMinX(),
+                start.getCenterY() - pane.getMinY(),
+                end.getCenterX() - pane.getMinX(),
+                end.getCenterY() - pane.getMinY()
         );
 
         line.setStrokeWidth(8);
@@ -261,4 +301,46 @@ public class AiGamePlayController implements Initializable  {
 
         lineOverlay.getChildren().add(line);
     }
+
+    private void savedFile() {
+        PlayerData playerData = PlayerData.getInstance();
+
+        if (playerData.isRecordMoves() && !isCreated) {
+            File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            gameFile = new File(dir, time+"("+playerData.getDifficulty()+")" + ".txt");
+
+            try {
+                fos = new FileOutputStream(gameFile, true);
+                dos = new DataOutputStream(fos);
+                
+
+                dos.flush();
+
+                isCreated = true;
+                isRecording=true; 
+
+            } catch (FileNotFoundException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            } catch (IOException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+
+        }
+    }
+
+    private void recordMove(String buttonId, String player) {
+        if (isRecording && dos != null) {
+            try {
+
+                String move = player + " clicked: " + buttonId + "\n";
+                dos.writeBytes(move);
+                dos.flush();
+                System.out.println("Recorded: " + move);
+            } catch (IOException ex) {
+                System.err.println("Error recording move: " + ex.getMessage());
+            }
+        }
+    }
+
 }

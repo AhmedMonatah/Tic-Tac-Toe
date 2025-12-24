@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+
 /**
  * FXML Controller class
  *
@@ -23,27 +24,32 @@ import javafx.scene.input.MouseEvent;
  */
 public class Player1_vs_Ai_Hard_Controller implements Initializable {
 
-
     @FXML
     private Button backButton;
     @FXML
     private TextField player1Input;
     @FXML
     private CheckBox recordCheckbox;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         backButton.setOnMouseClicked(event -> {
-        try {
-            App.setRoot("ChoiceDifficulty");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    });
+            try {
+                App.setRoot("ChoiceDifficulty");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        recordCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            PlayerData.getInstance().setRecordMoves(newValue);
+            System.out.println("Checkbox changed: " + newValue);
+            System.out.println("PlayerData recordMoves: " + PlayerData.getInstance().isRecordMoves());
+        });
     }
-    
+
     @FXML
     private void handleBack(MouseEvent event) {
         try {
@@ -55,9 +61,16 @@ public class Player1_vs_Ai_Hard_Controller implements Initializable {
 
     @FXML
     private void btn(ActionEvent event) throws IOException {
+        PlayerData.getInstance().setRecordMoves(recordCheckbox.isSelected());
         PlayerData.getInstance().setPlayerName(player1Input.getText());
         PlayerData.getInstance().setDifficulty("Hard");
         App.setRoot("AiGamePlay");
+    }
+
+    public boolean isRecordClicked() {
+        System.out.println("Record is checked: " + recordCheckbox.isSelected());
+        return recordCheckbox.isSelected();
+
     }
 
 }

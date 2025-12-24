@@ -16,6 +16,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
+
+
 /**
  * FXML Controller class
  *
@@ -29,6 +31,8 @@ public class Player1_vs_Ai_Easy_Controller implements Initializable {
     private TextField player1Input;
     @FXML
     private CheckBox recordCheckbox;
+    private boolean isChecked=false;  
+    
 
     /**
      * Initializes the controller class.
@@ -42,12 +46,18 @@ public class Player1_vs_Ai_Easy_Controller implements Initializable {
             e.printStackTrace();
         }
     });
+        recordCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            PlayerData.getInstance().setRecordMoves(newValue);
+            System.out.println("Checkbox changed: " + newValue);
+            System.out.println("PlayerData recordMoves: " + PlayerData.getInstance().isRecordMoves());
+        });
     }    
 
     @FXML
     private void handleBack(MouseEvent event) {
         try {
             App.setRoot("GameMode");
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,9 +65,20 @@ public class Player1_vs_Ai_Easy_Controller implements Initializable {
 
     @FXML
     private void btn(ActionEvent event) throws IOException {
+        PlayerData.getInstance().setRecordMoves(recordCheckbox.isSelected());
         PlayerData.getInstance().setPlayerName(player1Input.getText());
         PlayerData.getInstance().setDifficulty("Easy");
+        System.out.println("PlayerData recordMoves: " + PlayerData.getInstance().isRecordMoves());
         App.setRoot("AiGamePlay");
     }
+
+    @FXML
+    public boolean isRecordClicked() {
+        System.out.println("Record is checked: " + recordCheckbox.isSelected());
+        return recordCheckbox.isSelected(); 
+        
+    }
+    
+        
     
 }

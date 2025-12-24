@@ -6,6 +6,10 @@ package com.mycompany.tictactoe.controllers;
 
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,15 +51,43 @@ public class GameplayController implements Initializable {
     private Label player2;
     @FXML
     private Pane winningLinePane;
+    FileOutputStream fos = null;
+    DataOutputStream dos = null;
+    File testFile = null;
+    boolean isRecording = false;
+    private File gameFile;
+    private boolean isCreated = false;
+    PlayerData playerData = PlayerData.getInstance();
+    @FXML
+    private Button btn00;
+    @FXML
+    private Button btn10;
+    @FXML
+    private Button btn20;
+    @FXML
+    private Button btn01;
+    @FXML
+    private Button btn11;
+    @FXML
+    private Button btn21;
+    @FXML
+    private Button btn02;
+    @FXML
+    private Button btn12;
+    @FXML
+    private Button btn22;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameModel = new GameModel();
+        
     }
     
     public void initData(String p1, String p2) {
+        //System.out.println("yees");
         player1.setText(p1);
         player2.setText(p2);
         
@@ -100,10 +132,14 @@ public class GameplayController implements Initializable {
             
             if (gameModel.isPlayer1Turn()) {
                 btn.setText("O");
+                savedFile();
+                recordMove(btn.getId(),player1.getText());
                 btn.setStyle(
                     "-fx-text-fill: #f9a8d4; -fx-font-size: 38; -fx-font-weight: bold; -fx-background-color: transparent; -fx-border-color: rgba(255,255,255,0.4);");
             } else {
                 btn.setText("X");
+                savedFile();
+                recordMove(btn.getId(),player2.getText());
                 btn.setStyle(
                     "-fx-text-fill: #67e8f9; -fx-font-size: 38; -fx-font-weight: bold; -fx-background-color: transparent; -fx-border-color: rgba(255,255,255,0.4);");  
             }
@@ -118,9 +154,19 @@ public class GameplayController implements Initializable {
                 if (gameModel.isPlayer1Turn()) {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
                     title.setText(player1.getText() + " Wins!");
+                    try {
+                        dos.writeBytes("======="+player1.getText()+" won=======");
+                    } catch (IOException ex) {
+                        System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
                 } else {
                     aiScore.setText(String.valueOf(gameModel.getP2Score()));
                     title.setText(player2.getText() + " Wins!");
+                    try {
+                        dos.writeBytes("======="+player2.getText()+" won=======");
+                    } catch (IOException ex) {
+                        System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
                 }
 
             } else if (gameModel.checkDraw()) {
@@ -265,6 +311,46 @@ public class GameplayController implements Initializable {
             App.setRoot("Player1_vs_Player2");
         } catch (IOException ex) {
             System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+     private void savedFile() {
+        PlayerData playerData = PlayerData.getInstance();
+
+        if (playerData.isRecordMoves() && !isCreated) {
+            File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            gameFile = new File(dir, time+"("+player1.getText()+"_"+"Vs"+player2.getText()+")" + ".txt");
+
+            try {
+                fos = new FileOutputStream(gameFile, true);
+                dos = new DataOutputStream(fos);
+                
+
+                dos.flush();
+
+                isCreated = true;
+                isRecording=true; 
+
+            } catch (FileNotFoundException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            } catch (IOException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+
+        }
+    }
+
+    private void recordMove(String buttonId, String player) {
+        if (isRecording && dos != null) {
+            try {
+
+                String move = player + " clicked: " + buttonId + "\n";
+                dos.writeBytes(move);
+                dos.flush();
+                System.out.println("Recorded: " + move);
+            } catch (IOException ex) {
+                System.err.println("Error recording move: " + ex.getMessage());
+            }
         }
     }
 

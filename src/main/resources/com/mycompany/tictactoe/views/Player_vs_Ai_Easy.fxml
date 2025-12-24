@@ -124,7 +124,7 @@
 
                 <VBox alignment="CENTER" spacing="20.0">
                     <children>
-                        <CheckBox fx:id="recordCheckbox" mnemonicParsing="false" text="REC MATCH" textFill="WHITE">
+                        <CheckBox fx:id="recordCheckbox" mnemonicParsing="false" onAction="#isRecordClicked" text="REC MATCH" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="16.0" />
                             </font>
