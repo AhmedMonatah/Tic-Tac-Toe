@@ -5,6 +5,7 @@
 package com.mycompany.tictactoe.controllers;
 
 import com.mycompany.tictactoe.App;
+import com.mycompany.tictactoe.models.GameModel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,6 +24,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class AiGamePlayController implements Initializable  {
+    private GameModel gameModel;
     @FXML
     private Label playerScore;
     @FXML
@@ -60,6 +62,7 @@ public class AiGamePlayController implements Initializable  {
     private AnchorPane lineOverlay;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        gameModel = new GameModel();
         title.setText(PlayerData.getInstance().getPlayerName() + " vs AI");
     }    
 
@@ -87,6 +90,18 @@ public class AiGamePlayController implements Initializable  {
             System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
+    private void renderButton(Button button, String symbol) {
+        button.setText(symbol);
+        button.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-border-color: rgba(255,255,255,0.4);" +
+            "-fx-border-width: 1;" +
+            "-fx-border-radius: 6;" +
+            "-fx-font-size: 38px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: " + (symbol.equals("O") ? "#f9a8d4;" : "#67e8f9;")
+        );
+    }
 
     @FXML
     private void handleMove(ActionEvent event) {
@@ -94,23 +109,7 @@ public class AiGamePlayController implements Initializable  {
         if (!clickedButton.getText().isEmpty()) {
             return;
         }
-        clickedButton.setText("O");
-        clickedButton.setStyle(
-            "-fx-background-color: transparent;" +
-            "-fx-border-color: rgba(255,255,255,0.4);" +
-            "-fx-border-width: 1;" +
-            "-fx-border-radius: 6;" +
-            "-fx-background-radius: 6;" +
-            "-fx-padding: 0;" +
-            "-fx-font-size: 38px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-font-family: Arial;" +
-            "-fx-text-fill: #f9a8d4;" +
-            "-fx-focus-color: transparent;" +
-            "-fx-faint-focus-color: transparent;"
-        );
-        clickedButton.setFocusTraversable(false);
- 
+        renderButton(clickedButton, "O");
         String btn = clickedButton.getId();
         System.out.println(btn);
         game.makeMove(btn.charAt(3)-'0', btn.charAt(4)-'0', 'O');
@@ -124,22 +123,7 @@ public class AiGamePlayController implements Initializable  {
             Button aiButton = (Button) gameGrid.lookup(buttonId);
             game.makeMove(index[0], index[1], 'X');
             if (aiButton != null) {
-                aiButton.setText("X");
-                aiButton.setStyle(
-                    "-fx-background-color: transparent;"+
-                    "-fx-border-color: rgba(255,255,255,0.4);" +
-                    "-fx-border-width: 1;" +
-                    "-fx-border-radius: 6;" +
-                    "-fx-background-radius: 6;" +
-                    "-fx-padding: 0;" +
-                    "-fx-font-size: 38px;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-font-family: Arial;" +
-                    "-fx-text-fill: #67e8f9;" +
-                    "-fx-focus-color: transparent;" +
-                    "-fx-faint-focus-color: transparent;"
-                );
-                aiButton.setFocusTraversable(false);
+                renderButton(aiButton, "X");
                 CheckWin('X');
             } else {
                 System.out.println("Button not found: " + buttonId);
@@ -152,6 +136,7 @@ public class AiGamePlayController implements Initializable  {
                 game.incrementHumanScore();
                 playerScore.setText(Integer.toString(game.getHumanScore()));
                 drawWinningLine('O');
+                gameModel.showVideoInDialog();
                 disableAllButtons();
                 return true;
             }else{
@@ -165,7 +150,6 @@ public class AiGamePlayController implements Initializable  {
         else if(game.isBoardFull()){
             game.incrementDrawScore();
             drawScore.setText(Integer.toString(game.getDrawScore()));
-            System.out.println("incremented");
             disableAllButtons();
             return true;
         }

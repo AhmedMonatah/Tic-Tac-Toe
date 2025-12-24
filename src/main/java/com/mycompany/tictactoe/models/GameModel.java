@@ -4,6 +4,18 @@
  */
 package com.mycompany.tictactoe.models;
 
+import java.io.File;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
 /**
  *
  * @author omark
@@ -98,7 +110,7 @@ public class GameModel {
                 }
             }
         }
-        isGameActive = false; // Draw ends game
+        isGameActive = false; 
         drawScore++;
         return true;
     }
@@ -155,5 +167,37 @@ public class GameModel {
             this.type = type;
             this.index = index;
         }
+    }
+    
+    public void showVideoInDialog() {
+        System.out.println("Winnig...........");
+        Platform.runLater(()->{
+             Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Video Player");
+        alert.setHeaderText("Playing Video");
+
+        String videoPath = new File("/D://ITI//java//java project//Tic-Tac-Toe//src//main//resources//images//cheering.mp4/").toURI().toString(); // Your video path
+        Media media = new Media(videoPath);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setFitWidth(600);
+        mediaView.setFitHeight(400);
+        mediaView.setPreserveRatio(true);
+
+        VBox videoContainer = new VBox(10, mediaView);
+        videoContainer.setPadding(new Insets(10));
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setContent(videoContainer);
+        dialogPane.setPrefSize(650, 500);
+
+        alert.initModality(Modality.APPLICATION_MODAL);
+
+        alert.setOnShown(e -> mediaPlayer.play());
+
+        alert.setOnCloseRequest(e -> mediaPlayer.stop());
+
+        alert.showAndWait();
+        });
     }
 }

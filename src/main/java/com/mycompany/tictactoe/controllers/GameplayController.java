@@ -172,8 +172,6 @@ public class GameplayController implements Initializable {
                 if (info != null) {
                     drawWinningLine(info.type, info.index);
                 }
-                
-                    
                     
                 if (gameModel.isPlayer1Turn()) {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
@@ -182,6 +180,11 @@ public class GameplayController implements Initializable {
                     aiScore.setText(String.valueOf(gameModel.getP2Score()));
                     title.setText(player2.getText() + " Wins!");
                 }
+                
+                if(player1.getText() == null ? AppConfig.CURRENT_USER == null : player1.getText().equals(AppConfig.CURRENT_USER)){
+                    gameModel.showVideoInDialog();
+                }
+                    
 
             } else if (gameModel.checkDraw()) {
                 drawScore.setText(String.valueOf(gameModel.getDrawScore()));
