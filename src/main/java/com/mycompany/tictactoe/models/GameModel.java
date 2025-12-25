@@ -176,7 +176,7 @@ public class GameModel {
         alert.setTitle("Video Player");
         alert.setHeaderText("Playing Video");
 
-        String videoPath = new File("/D://ITI//java//java project//Tic-Tac-Toe//src//main//resources//images//cheering.mp4/").toURI().toString(); // Your video path
+        String videoPath = new File("/E://down//vid//Download.mp4").toURI().toString(); // Your video path
         Media media = new Media(videoPath);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);

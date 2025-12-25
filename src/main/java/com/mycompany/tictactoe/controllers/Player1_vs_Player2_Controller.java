@@ -42,6 +42,11 @@ public class Player1_vs_Player2_Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+         recordCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            PlayerData.getInstance().setRecordMoves(newValue);
+            System.out.println("Checkbox changed: " + newValue);
+            System.out.println("PlayerData recordMoves: " + PlayerData.getInstance().isRecordMoves());
+        });
     }    
     
     @FXML
@@ -85,6 +90,11 @@ public class Player1_vs_Player2_Controller implements Initializable {
             System.getLogger(Player1_vs_Player2_Controller.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
+
+    }
+    public boolean isRecordClicked() {
+        System.out.println("Record is checked: " + recordCheckbox.isSelected());
+        return recordCheckbox.isSelected();
 
     }
 

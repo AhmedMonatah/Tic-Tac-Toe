@@ -6,6 +6,10 @@ package com.mycompany.tictactoe.controllers;
 
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -60,6 +64,12 @@ public class AiGamePlayController implements Initializable  {
     private Button btn22;
     @FXML
     private AnchorPane lineOverlay;
+    FileOutputStream fos = null;
+    DataOutputStream dos = null;
+    File testFile = null;
+    boolean isRecording = false;
+    private File gameFile;
+    private boolean isCreated = false;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameModel = new GameModel();
@@ -71,6 +81,7 @@ public class AiGamePlayController implements Initializable  {
         game.resetBoard();
         clearAllButtons();
         clearWinningLine();
+        isCreated=false;
     }
 
     @FXML
@@ -112,7 +123,10 @@ public class AiGamePlayController implements Initializable  {
         renderButton(clickedButton, "O");
         String btn = clickedButton.getId();
         System.out.println(btn);
+        savedFile();
+        recordMove(btn, "Player");
         game.makeMove(btn.charAt(3)-'0', btn.charAt(4)-'0', 'O');
+        
         if(!CheckWin('O')){
             AiMove();
         }
@@ -122,6 +136,8 @@ public class AiGamePlayController implements Initializable  {
             String buttonId = String.format("#btn%d%d", index[0], index[1]);
             Button aiButton = (Button) gameGrid.lookup(buttonId);
             game.makeMove(index[0], index[1], 'X');
+            savedFile();
+            recordMove(buttonId, "AI");
             if (aiButton != null) {
                 renderButton(aiButton, "X");
                 CheckWin('X');
@@ -136,6 +152,11 @@ public class AiGamePlayController implements Initializable  {
                 game.incrementHumanScore();
                 playerScore.setText(Integer.toString(game.getHumanScore()));
                 drawWinningLine('O');
+                try {
+                    dos.writeBytes("=======You won=======");
+                } catch (IOException ex) {
+                    System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
                 gameModel.showVideoInDialog();
                 disableAllButtons();
                 return true;
@@ -143,6 +164,11 @@ public class AiGamePlayController implements Initializable  {
                 game.incrementAiScore();
                 aiScore.setText(Integer.toString(game.getAiScore()));
                 drawWinningLine('X');
+                try {
+                    dos.writeBytes("=======Ai won=======");
+                } catch (IOException ex) {
+                    System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
                 disableAllButtons();
                 return false;
             }
@@ -244,5 +270,45 @@ public class AiGamePlayController implements Initializable  {
         line.setEffect(new DropShadow(12, Color.web("#fde047")));
 
         lineOverlay.getChildren().add(line);
+    }
+    private void savedFile() {
+        PlayerData playerData = PlayerData.getInstance();
+
+        if (playerData.isRecordMoves() && !isCreated) {
+            File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            gameFile = new File(dir, time+"("+playerData.getDifficulty()+")" + ".txt");
+
+            try {
+                fos = new FileOutputStream(gameFile, true);
+                dos = new DataOutputStream(fos);
+                
+
+                dos.flush();
+
+                isCreated = true;
+                isRecording=true; 
+
+            } catch (FileNotFoundException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            } catch (IOException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+
+        }
+    }
+
+    private void recordMove(String buttonId, String player) {
+        if (isRecording && dos != null) {
+            try {
+
+                String move = player + " clicked: " + buttonId + "\n";
+                dos.writeBytes(move);
+                dos.flush();
+                System.out.println("Recorded: " + move);
+            } catch (IOException ex) {
+                System.err.println("Error recording move: " + ex.getMessage());
+            }
+        }
     }
 }
