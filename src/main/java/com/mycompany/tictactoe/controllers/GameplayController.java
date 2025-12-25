@@ -26,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
@@ -86,6 +87,8 @@ public class GameplayController implements Initializable {
     private Button btn12;
     @FXML
     private Button btn22;
+    @FXML
+   // private static CheckBox recOnlineMatch=Users_listController.recordCheckBox;
 
     /**
      * Initializes the controller class.
@@ -93,7 +96,6 @@ public class GameplayController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameModel = new GameModel();
-        System.out.println("off");
 
         if (AppConfig.IS_ONLINE) {
             setupOnlineGame();
@@ -474,6 +476,7 @@ public class GameplayController implements Initializable {
                     Platform.runLater(() -> {
                         showInfo("Player " + AppConfig.OPPONENT + " left the game.");
                         try {
+                            dos.writeBytes(AppConfig.OPPONENT+" left the game");
                             AppConfig.IS_ONLINE = false;
                             App.setRoot("Users_list");
                         } catch (IOException e) {
@@ -492,7 +495,11 @@ public class GameplayController implements Initializable {
             int y = json.getInt("y");
             Button btn = getButton(x, y);
             if (btn != null) {
+                //savedFile();
+                //recordMove(msg.getUsername(),btn.getId());
                 handleMoveInternal(btn, x, y, true);
+                
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -500,12 +507,14 @@ public class GameplayController implements Initializable {
     }
 
     private void savedFile() {
-        PlayerData playerData = PlayerData.getInstance();
+        PlayerData playerData = PlayerData.getInstance();    
 
-        if (playerData.isRecordMoves() && !isCreated) {
+         if (playerData.isRecordMoves() && !isCreated) {
+            System.out.println("ON2");
             File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
+            if (!dir.exists()) dir.mkdirs();
             String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-            gameFile = new File(dir, time + "(" + player1.getText() + "_" + "Vs" + player2.getText() + ")" + ".txt");
+            gameFile = new File(dir, time + "(" + player1.getText() + "-" + "Vs"+"-" + player2.getText() + ")" + ".txt");
 
             try {
                 fos = new FileOutputStream(gameFile, true);
@@ -525,8 +534,9 @@ public class GameplayController implements Initializable {
         }
     }
 
-    private void recordMove(String buttonId, String player) {
-        if (isRecording && dos != null) {
+    private void recordMove(String buttonId, String player) {         
+          if (isRecording && dos != null) {
+             System.out.println("ON4");
             try {
 
                 String move = player + " clicked: " + buttonId + "\n";
