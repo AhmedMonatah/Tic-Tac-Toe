@@ -88,6 +88,7 @@ public class AiGamePlayController implements Initializable  {
     private void changeMode(ActionEvent event){
         try {
             App.setRoot("GameMode");
+            PlayerData.getInstance().setRecordMoves(false);
         } catch (IOException ex) {
             System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -96,6 +97,7 @@ public class AiGamePlayController implements Initializable  {
     @FXML
     private void logout(ActionEvent event) {
         try {
+            PlayerData.getInstance().setRecordMoves(false);
             App.setRoot("GameMode");
         } catch (IOException ex) {
             System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -175,6 +177,11 @@ public class AiGamePlayController implements Initializable  {
         }
         else if(game.isBoardFull()){
             game.incrementDrawScore();
+            try {
+                dos.writeBytes("=======Draw=======");
+            } catch (IOException ex) {
+                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
             drawScore.setText(Integer.toString(game.getDrawScore()));
             disableAllButtons();
             return true;
