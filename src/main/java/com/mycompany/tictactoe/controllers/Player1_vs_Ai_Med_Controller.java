@@ -42,6 +42,11 @@ public class Player1_vs_Ai_Med_Controller implements Initializable {
             e.printStackTrace();
         }
     });
+        recordCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            PlayerData.getInstance().setRecordMoves(newValue);
+            System.out.println("Checkbox changed: " + newValue);
+            System.out.println("PlayerData recordMoves: " + PlayerData.getInstance().isRecordMoves());
+        });
     }    
     
     @FXML
@@ -59,6 +64,11 @@ public class Player1_vs_Ai_Med_Controller implements Initializable {
         PlayerData.getInstance().setPlayerName(player1Input.getText());
         PlayerData.getInstance().setDifficulty("Med");
         App.setRoot("AiGamePlay");
+        
+    }
+     public boolean isRecordClicked() {
+        System.out.println("Record is checked: " + recordCheckbox.isSelected());
+        return recordCheckbox.isSelected(); 
         
     }
 

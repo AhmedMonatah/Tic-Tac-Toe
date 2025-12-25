@@ -7,7 +7,18 @@ public class PlayerData {
     private static PlayerData instance;
     private String playerName;
     private String difficulty = "Medium";
+    private boolean recordMoves = false;
+     
+     public boolean isRecordMoves() {
+        
+        return recordMoves;
+    }
     
+    public void setRecordMoves(boolean recordMoves) {
+        
+        this.recordMoves = recordMoves;
+    }
+           
     private PlayerData() {}
     
     public static PlayerData getInstance() {

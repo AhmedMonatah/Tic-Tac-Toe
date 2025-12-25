@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 
 public class Users_listController implements Initializable {
 
@@ -46,6 +47,7 @@ public class Users_listController implements Initializable {
     private ScrollPane scrollPane;
 
     private NetworkClient client = AppConfig.CLIENT;
+    //public static CheckBox recordCheckBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -134,52 +136,76 @@ public class Users_listController implements Initializable {
         client.sendRaw(req.toString());
     }
 
+    
     private void showGameRequest(Message msg) {
-        JSONObject json = msg.getRawJson();
-        String fromUser = json.getString("from");
-        String toUser = json.getString("to");
-        System.out.println("Game request to: " + toUser);
-        if(AppConfig.CURRENT_USER == null ? toUser == null : AppConfig.CURRENT_USER.equals(toUser)){
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Game Request");
-            alert.setHeaderText("Game Invitation");
-            alert.setContentText(fromUser + " wants to play Tic-Tac-Toe with you!\nDo you accept the challenge?");
+    JSONObject json = msg.getRawJson();
+    String fromUser = json.getString("from");
+    String toUser = json.getString("to");
 
-            ButtonType acceptButton = new ButtonType("Accept");
-            ButtonType declineButton = new ButtonType("Decline");
+    if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.equals(toUser)) {
 
-            alert.getButtonTypes().setAll(acceptButton, declineButton);
-            Optional<ButtonType> result = alert.showAndWait();
-            JSONObject req = new JSONObject();
-            
-            if (result.isPresent()) {
-                if (result.get() == acceptButton) {
-                    req.put("response", "accept");
-                    System.out.println("Accepted game request from " + fromUser);
-                    
-                    AppConfig.IS_ONLINE = true;
-                    AppConfig.OPPONENT = fromUser;
-                    AppConfig.AM_I_X = false;
-                    try {
-                        App.setRoot("GamePlay");
-                    } catch (IOException ex) {
-                        System.getLogger(Users_listController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                    }
-                    
-                    
-                } else if (result.get() == declineButton) {
-                    req.put("response", "decline");
-                    System.out.println("Declined game request from " + fromUser);
-                }
-            }
-            req.put("action", "request_response");
-            req.put("from", AppConfig.CURRENT_USER);
-            req.put("to", fromUser);
-            client.sendRaw(req.toString());
+        Stage dialog = new Stage();
+        dialog.setTitle("Game Request");
+        dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-        }
+        Label title = new Label("Game Invitation");
+        title.setFont(Font.font(18));
+
+        Label message = new Label(fromUser + " wants to play Tic-Tac-Toe with you!");
+        message.setWrapText(true);
+
+        CheckBox recordCheckBox = new CheckBox("Allow recording this match");
         
+
+
+        Button acceptBtn = new Button("Accept");
+        Button declineBtn = new Button("Decline");
+
+        HBox buttons = new HBox(15, acceptBtn, declineBtn);
+        buttons.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(15, title, message, recordCheckBox, buttons);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.CENTER);
+        root.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 10;");
+
+        dialog.setScene(new javafx.scene.Scene(root, 360, 220));
+
+        JSONObject req = new JSONObject();
+
+        acceptBtn.setOnAction(e -> {
+            req.put("response", "accept");
+            req.put("recording", recordCheckBox.isSelected());
+            PlayerData.getInstance().setRecordMoves(recordCheckBox.isSelected());
+
+            AppConfig.IS_ONLINE = true;
+            AppConfig.OPPONENT = fromUser;
+            AppConfig.AM_I_X = false;
+
+            dialog.close();
+
+            try {
+                App.setRoot("GamePlay");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        declineBtn.setOnAction(e -> {
+            req.put("response", "decline");
+            req.put("recording", false);
+            dialog.close();
+        });
+
+        dialog.showAndWait();
+
+        req.put("action", "request_response");
+        req.put("from", AppConfig.CURRENT_USER);
+        req.put("to", fromUser);
+
+        client.sendRaw(req.toString());
     }
+}
     
     private void RequestResponse(Message msg) {
     JSONObject json = msg.getRawJson();
