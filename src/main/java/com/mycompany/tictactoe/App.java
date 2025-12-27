@@ -15,7 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("GameMode"), 900, 600);
+        scene = new Scene(loadFXML("SplashScreen"), 900, 600);
         stage.setScene(scene);
         SoundManager.playBackground("/sound/soundtrack.mp3");
         stage.show();
