@@ -63,7 +63,7 @@ public class Users_listController implements Initializable {
                         Platform.runLater(() -> showGameRequest(msg));
                         break;
                     case "request_response":
-                            Platform.runLater(()-> RequestResponse(msg));
+                        Platform.runLater(() -> RequestResponse(msg));
                         break;
                 }
             }
@@ -73,6 +73,7 @@ public class Users_listController implements Initializable {
         msg.setAction("get_users");
         client.sendMessage(msg);
     }
+
     private void updateUsersList(Message msg) {
         try {
             playersContainer.getChildren().clear();
@@ -84,10 +85,14 @@ public class Users_listController implements Initializable {
             int onlineCount = 0;
 
             for (int i = 0; i < jsonArray.length(); i++) {
-                String username = jsonArray.getString(i);
-                if (username.equals(AppConfig.CURRENT_USER)) continue;
+                JSONObject userObj = jsonArray.getJSONObject(i);
+                String username = userObj.getString("name");
+                int score = userObj.getInt("score");
+                if (username.equals(AppConfig.CURRENT_USER)) {
+                    continue;
+                }
                 onlineCount++;
-                
+
                 HBox playerBox = new HBox();
                 playerBox.setAlignment(Pos.CENTER_LEFT);
                 playerBox.setSpacing(10);
@@ -125,135 +130,130 @@ public class Users_listController implements Initializable {
         }
     }
 
-
     private void sendGameRequest(String toUser) {
         JSONObject req = new JSONObject();
         req.put("action", "game_request");
         req.put("from", AppConfig.CURRENT_USER);
         req.put("to", toUser);
-        
+
         System.out.println("Game request from: " + AppConfig.CURRENT_USER);
         client.sendRaw(req.toString());
     }
 
-    
     private void showGameRequest(Message msg) {
-    JSONObject json = msg.getRawJson();
-    String fromUser = json.getString("from");
-    String toUser = json.getString("to");
+        JSONObject json = msg.getRawJson();
+        String fromUser = json.getString("from");
+        String toUser = json.getString("to");
 
-    if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.equals(toUser)) {
+        if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.equals(toUser)) {
 
-        Stage dialog = new Stage();
-        dialog.setTitle("Game Request");
-        dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            Stage dialog = new Stage();
+            dialog.setTitle("Game Request");
+            dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-        Label title = new Label("Game Invitation");
-        title.setFont(Font.font(18));
+            Label title = new Label("Game Invitation");
+            title.setFont(Font.font(18));
 
-        Label message = new Label(fromUser + " wants to play Tic-Tac-Toe with you!");
-        message.setWrapText(true);
+            Label message = new Label(fromUser + " wants to play Tic-Tac-Toe with you!");
+            message.setWrapText(true);
 
-        CheckBox recordCheckBox = new CheckBox("Allow recording this match");
-        
+            CheckBox recordCheckBox = new CheckBox("Allow recording this match");
 
+            Button acceptBtn = new Button("Accept");
+            Button declineBtn = new Button("Decline");
 
-        Button acceptBtn = new Button("Accept");
-        Button declineBtn = new Button("Decline");
+            HBox buttons = new HBox(15, acceptBtn, declineBtn);
+            buttons.setAlignment(Pos.CENTER);
 
-        HBox buttons = new HBox(15, acceptBtn, declineBtn);
-        buttons.setAlignment(Pos.CENTER);
+            VBox root = new VBox(15, title, message, recordCheckBox, buttons);
+            root.setPadding(new Insets(20));
+            root.setAlignment(Pos.CENTER);
+            root.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 10;");
 
-        VBox root = new VBox(15, title, message, recordCheckBox, buttons);
-        root.setPadding(new Insets(20));
-        root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 10;");
+            dialog.setScene(new javafx.scene.Scene(root, 360, 220));
 
-        dialog.setScene(new javafx.scene.Scene(root, 360, 220));
+            JSONObject req = new JSONObject();
 
-        JSONObject req = new JSONObject();
+            acceptBtn.setOnAction(e -> {
+                req.put("response", "accept");
+                req.put("recording", recordCheckBox.isSelected());
+                PlayerData.getInstance().setRecordMoves(recordCheckBox.isSelected());
 
-        acceptBtn.setOnAction(e -> {
-            req.put("response", "accept");
-            req.put("recording", recordCheckBox.isSelected());
-            PlayerData.getInstance().setRecordMoves(recordCheckBox.isSelected());
+                AppConfig.IS_ONLINE = true;
+                AppConfig.OPPONENT = fromUser;
+                AppConfig.AM_I_X = false;
 
-            AppConfig.IS_ONLINE = true;
-            AppConfig.OPPONENT = fromUser;
-            AppConfig.AM_I_X = false;
+                dialog.close();
 
-            dialog.close();
-
-            try {
-                App.setRoot("GamePlay");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        declineBtn.setOnAction(e -> {
-            req.put("response", "decline");
-            req.put("recording", false);
-            dialog.close();
-        });
-
-        dialog.showAndWait();
-
-        req.put("action", "request_response");
-        req.put("from", AppConfig.CURRENT_USER);
-        req.put("to", fromUser);
-
-        client.sendRaw(req.toString());
-    }
-}
-    
-    private void RequestResponse(Message msg) {
-    JSONObject json = msg.getRawJson();
-    String fromUser = json.getString("from");
-    String toUser = json.getString("to");
-    String response = json.getString("response");
-
-    System.out.println("DEBUG: I am [" + AppConfig.CURRENT_USER + "], Message is to [" + toUser + "]");
-
-    if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.trim().equals(toUser.trim())) {
-        if ("accept".equals(response)) {
-            AppConfig.IS_ONLINE = true;
-            AppConfig.OPPONENT = fromUser;
-            AppConfig.AM_I_X = true;
-
-            Platform.runLater(() -> {
                 try {
-                    System.out.println("Transitioning to GamePlay for: " + AppConfig.CURRENT_USER);
                     App.setRoot("GamePlay");
                 } catch (IOException ex) {
-                    System.err.println("Failed to load GamePlay screen: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             });
-        } else if ("decline".equals(response)) {
-            Platform.runLater(() -> showInfo("User " + fromUser + " declined your request"));
+
+            declineBtn.setOnAction(e -> {
+                req.put("response", "decline");
+                req.put("recording", false);
+                dialog.close();
+            });
+
+            dialog.showAndWait();
+
+            req.put("action", "request_response");
+            req.put("from", AppConfig.CURRENT_USER);
+            req.put("to", fromUser);
+
+            client.sendRaw(req.toString());
         }
-    } else {
-        System.out.println("DEBUG: Condition failed. Current user doesn't match toUser.");
     }
-}
-    
-    
-  @FXML
-private void BackToMenu() {
-    try {
-        JSONObject logout = new JSONObject();
-        logout.put("action", "logout");
-        logout.put("username", AppConfig.CURRENT_USER);
-        
-        client.sendRaw(logout.toString());
-        
-        Stage stage = (Stage) numberOfAvilablePlayers.getScene().getWindow();
-        new AppRoute().goToStartPage(stage);
-        
-        client.disconnect(); 
-    } catch (Exception e) {
-        e.printStackTrace();
+
+    private void RequestResponse(Message msg) {
+        JSONObject json = msg.getRawJson();
+        String fromUser = json.getString("from");
+        String toUser = json.getString("to");
+        String response = json.getString("response");
+
+        System.out.println("DEBUG: I am [" + AppConfig.CURRENT_USER + "], Message is to [" + toUser + "]");
+
+        if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.trim().equals(toUser.trim())) {
+            if ("accept".equals(response)) {
+                AppConfig.IS_ONLINE = true;
+                AppConfig.OPPONENT = fromUser;
+                AppConfig.AM_I_X = true;
+
+                Platform.runLater(() -> {
+                    try {
+                        System.out.println("Transitioning to GamePlay for: " + AppConfig.CURRENT_USER);
+                        App.setRoot("GamePlay");
+                    } catch (IOException ex) {
+                        System.err.println("Failed to load GamePlay screen: " + ex.getMessage());
+                    }
+                });
+            } else if ("decline".equals(response)) {
+                Platform.runLater(() -> showInfo("User " + fromUser + " declined your request"));
+            }
+        } else {
+            System.out.println("DEBUG: Condition failed. Current user doesn't match toUser.");
+        }
     }
-}
+
+    @FXML
+    private void BackToMenu() {
+        try {
+            JSONObject logout = new JSONObject();
+            logout.put("action", "logout");
+            logout.put("username", AppConfig.CURRENT_USER);
+
+            client.sendRaw(logout.toString());
+
+            Stage stage = (Stage) numberOfAvilablePlayers.getScene().getWindow();
+            new AppRoute().goToStartPage(stage);
+
+            client.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
