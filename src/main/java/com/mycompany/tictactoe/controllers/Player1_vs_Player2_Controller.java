@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import classes.PlayerData;
 import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import java.net.URL;

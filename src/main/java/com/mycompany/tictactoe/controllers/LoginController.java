@@ -6,6 +6,7 @@ import classes.AppConfig;
 import classes.AppRoute;
 import classes.Message;
 import classes.NetworkClient;
+import classes.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -78,7 +79,9 @@ public class LoginController implements Initializable {
             }
         }
         client.sendMessage(new Message("login", user, pass));
-        
+        User.setName(user);
+        User.setPassword(pass);
+        User.setAvailable(true);
     }
 
     @FXML

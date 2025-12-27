@@ -1,11 +1,13 @@
 package com.mycompany.tictactoe.controllers;
 
+import classes.PlayerData;
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.AppRoute;
 import classes.NetworkClient;
 import classes.Message;
 import classes.MessageListener;
+import classes.User;
 import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import javafx.application.Platform;
@@ -36,7 +38,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 
 public class Users_listController implements Initializable {
-
     @FXML
     private VBox playersContainer;
 
@@ -79,51 +80,71 @@ public class Users_listController implements Initializable {
 
             JSONObject json = msg.getRawJson();
             JSONArray jsonArray = json.getJSONArray("users");
-            playersContainer.getChildren().clear();
 
             int onlineCount = 0;
 
             for (int i = 0; i < jsonArray.length(); i++) {
-                String username = jsonArray.getString(i);
+                JSONObject userObj = jsonArray.getJSONObject(i);
+
+                String username = userObj.getString("username");
+                boolean isAvailable = userObj.getBoolean("isAvailable");
+
                 if (username.equals(AppConfig.CURRENT_USER)) continue;
                 onlineCount++;
-                
-                HBox playerBox = new HBox();
-                playerBox.setAlignment(Pos.CENTER_LEFT);
-                playerBox.setSpacing(10);
-                playerBox.setPadding(new Insets(8));
-                playerBox.setStyle("-fx-background-color: rgba(200,200,200,0.3); -fx-background-radius: 8;");
 
-                Circle statusCircle = new Circle(6, Color.LIMEGREEN);
+                HBox playerBox = new HBox(10);
+                playerBox.setAlignment(Pos.CENTER_LEFT);
+                playerBox.setPadding(new Insets(8));
+                playerBox.setStyle(
+                    "-fx-background-color: rgba(200,200,200,0.3); -fx-background-radius: 8;"
+                );
+
+                // 🔵 Status circle
+                Circle statusCircle = new Circle(6);
+                statusCircle.setFill(isAvailable ? Color.LIMEGREEN : Color.GRAY);
 
                 Label nameLabel = new Label(username);
-                nameLabel.setTextFill(Color.BLACK);
                 nameLabel.setFont(Font.font("Arial", 16));
 
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
                 Button requestBtn = new Button("Request");
-                requestBtn.setOnAction(event -> sendGameRequest(username));
 
-                playerBox.getChildren().addAll(statusCircle, nameLabel, spacer, requestBtn);
+                if (!isAvailable) {
+                    requestBtn.setDisable(true);
+                    requestBtn.setStyle(
+                        "-fx-background-color: #cccccc;" +
+                        "-fx-text-fill: #666666;" +
+                        "-fx-opacity: 1.0;"
+                    );
+                } else {
+                    requestBtn.setDisable(false);
+                    requestBtn.setOnAction(e -> sendGameRequest(username));
+                }
+
+                playerBox.getChildren().addAll(
+                    statusCircle, nameLabel, spacer, requestBtn
+                );
+
                 playersContainer.getChildren().add(playerBox);
             }
 
             if (onlineCount == 0) {
                 Label noPlayers = new Label("No other players currently online");
                 noPlayers.setTextFill(Color.GRAY);
-                noPlayers.setFont(Font.font("Arial", 14));
                 playersContainer.getChildren().add(noPlayers);
             }
 
-            numberOfAvilablePlayers.setText(onlineCount + " Players currently online");
+            numberOfAvilablePlayers.setText(
+                onlineCount + " Players currently online"
+            );
 
         } catch (Exception e) {
-            System.out.println("Error parsing JSON from server: " + msg.getMessage());
             e.printStackTrace();
         }
     }
+
 
 
     private void sendGameRequest(String toUser) {
@@ -181,7 +202,6 @@ public class Users_listController implements Initializable {
             AppConfig.IS_ONLINE = true;
             AppConfig.OPPONENT = fromUser;
             AppConfig.AM_I_X = false;
-
             dialog.close();
 
             try {
@@ -220,7 +240,6 @@ public class Users_listController implements Initializable {
             AppConfig.IS_ONLINE = true;
             AppConfig.OPPONENT = fromUser;
             AppConfig.AM_I_X = true;
-
             Platform.runLater(() -> {
                 try {
                     System.out.println("Transitioning to GamePlay for: " + AppConfig.CURRENT_USER);

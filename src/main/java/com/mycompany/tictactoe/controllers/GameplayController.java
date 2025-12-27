@@ -4,9 +4,11 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import classes.PlayerData;
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.Message;
+import classes.User;
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
 import java.io.DataOutputStream;
@@ -42,7 +44,6 @@ import org.json.JSONObject;
  * @author Ahmed
  */
 public class GameplayController implements Initializable {
-
     private GameModel gameModel;
 
     private static boolean xStartsNext = false;
@@ -96,7 +97,7 @@ public class GameplayController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameModel = new GameModel();
-
+        User.setAvailable(false);
         if (AppConfig.IS_ONLINE) {
             setupOnlineGame();
         }
@@ -112,7 +113,7 @@ public class GameplayController implements Initializable {
     private void startNewGame() {
 
         gameModel.startNewGame();
-
+        User.setAvailable(false);
         if (!xStartsNext) {
             gameModel.switchTurn();
         }
@@ -361,6 +362,7 @@ public class GameplayController implements Initializable {
     @FXML
     private void newRound(ActionEvent event) {
         if (AppConfig.IS_ONLINE) {
+            User.setAvailable(true);
             JSONObject json = new JSONObject();
             json.put("action", "new_round_request");
             json.put("to", AppConfig.OPPONENT);
@@ -382,7 +384,7 @@ public class GameplayController implements Initializable {
                 json.put("action", "player_left");
                 json.put("to", AppConfig.OPPONENT);
                 AppConfig.CLIENT.sendRaw(json.toString());
-
+                User.setAvailable(true);
                 AppConfig.IS_ONLINE = false;
             }
 
@@ -400,7 +402,7 @@ public class GameplayController implements Initializable {
                 json.put("action", "player_left");
                 json.put("to", AppConfig.OPPONENT);
                 AppConfig.CLIENT.sendRaw(json.toString());
-
+                User.setAvailable(true);
                 AppConfig.IS_ONLINE = false;
                 App.setRoot("Users_list");
             } else {
@@ -414,6 +416,7 @@ public class GameplayController implements Initializable {
     private void setupOnlineGame() {
         startNewGame();
         String opponent = AppConfig.OPPONENT;
+        
         if (AppConfig.AM_I_X) {
             // I am X (Player 1). Opponent is O (Player 2).
             player1.setText(AppConfig.CURRENT_USER);
@@ -471,6 +474,7 @@ public class GameplayController implements Initializable {
                         title.setText("Request Declined");
                         showInfo(AppConfig.OPPONENT + " declined to play another round.");
                     });
+                    User.setAvailable(true);
                     break;
                 case "player_left":
                     Platform.runLater(() -> {
@@ -479,6 +483,7 @@ public class GameplayController implements Initializable {
                             dos.writeBytes(AppConfig.OPPONENT+" left the game");
                             AppConfig.IS_ONLINE = false;
                             App.setRoot("Users_list");
+                            User.setAvailable(true);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

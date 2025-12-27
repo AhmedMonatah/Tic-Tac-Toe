@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoe.controllers;
 
+import classes.PlayerData;
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
 import java.io.DataOutputStream;
