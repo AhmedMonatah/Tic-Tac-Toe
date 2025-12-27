@@ -112,46 +112,86 @@ public class Users_listController implements Initializable {
                     continue;
                 onlineCount++;
 
-                HBox playerBox = new HBox();
-                playerBox.setAlignment(Pos.CENTER_LEFT);
-                playerBox.setSpacing(10);
-                playerBox.setPadding(new Insets(8));
-                playerBox.setStyle("-fx-background-color: rgba(200,200,200,0.3); -fx-background-radius: 8;");
+                // Root Container for the Item (StackPane for layering background)
+                javafx.scene.layout.StackPane itemRoot = new javafx.scene.layout.StackPane();
+                itemRoot.setMaxHeight(80.0);
+                itemRoot.setMinHeight(60.0);
+                itemRoot.setPrefHeight(75.0);
+                itemRoot.setStyle("-fx-background-color: transparent;");
 
-                // Green if available, Red/Gray if busy?
-                // The server sends is_available boolean.
+                // Background Region
+                Region background = new Region();
+                background.setStyle(
+                        "-fx-background-color: rgba(255, 255, 255, 0.15); -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.2); -fx-border-radius: 20; -fx-border-width: 1;");
+
+                // Content Container (HBox)
+                HBox contentBox = new HBox();
+                contentBox.setAlignment(Pos.CENTER_LEFT);
+                contentBox.setSpacing(15);
+                contentBox.setPadding(new Insets(0, 20, 0, 25)); // Top, Right, Bottom, Left
+
+                // 1. Status Circle
                 Circle statusCircle = new Circle(6, isAvailable ? Color.LIMEGREEN : Color.RED);
+                statusCircle.setStroke(Color.WHITE);
+                statusCircle.setStrokeWidth(1);
+
+                // 2. Info VBox (Name + Score)
+                VBox infoBox = new VBox();
+                infoBox.setAlignment(Pos.CENTER_LEFT);
+                infoBox.setSpacing(2);
 
                 Label nameLabel = new Label(username);
-                nameLabel.setTextFill(Color.BLACK);
-                nameLabel.setFont(Font.font("Arial", 16));
+                nameLabel.setTextFill(Color.WHITE);
+                nameLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 15));
 
-                // NEW: Score Label
-                Label scoreLabel = new Label("Rate: " + score);
-                scoreLabel.setTextFill(Color.web("#fde047")); // Gold color
-                scoreLabel.setFont(Font.font("Arial", 14));
-                scoreLabel.setStyle(
-                        "-fx-font-weight: bold; -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 2, 0.0, 0, 1);");
+                Label scoreLabel = new Label("Score: " + score);
+                scoreLabel.setTextFill(Color.web("#fde047")); // Gold
+                scoreLabel.setFont(Font.font("System", 12));
 
+                infoBox.getChildren().addAll(nameLabel, scoreLabel);
+
+                // 3. Spacer
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
+                // 4. Request Button
                 Button requestBtn = new Button(isAvailable ? "Request" : "Busy");
-                requestBtn.setDisable(!isAvailable); // Disable if busy
+                requestBtn.setDisable(!isAvailable);
+                requestBtn.setPrefWidth(95);
+                requestBtn.setPrefHeight(35);
+                requestBtn.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #ec4899, #7c3aed); -fx-background-radius: 10; -fx-cursor: hand; -fx-text-fill: white; -fx-font-size: 13px;");
+
+                // Action
                 requestBtn.setOnAction(event -> sendGameRequest(username));
 
-                playerBox.getChildren().addAll(statusCircle, nameLabel, scoreLabel, spacer, requestBtn);
-                playersContainer.getChildren().add(playerBox);
+                // Assemble HBox
+                contentBox.getChildren().addAll(statusCircle, infoBox, spacer, requestBtn);
+
+                // Assemble StackPane
+                itemRoot.getChildren().addAll(background, contentBox);
+
+                // Add to main list
+                playersContainer.getChildren().add(itemRoot);
             }
 
             if (onlineCount == 0) {
-                Label noPlayers = new Label("No other players currently online");
-                noPlayers.setTextFill(Color.GRAY);
-                noPlayers.setFont(Font.font("Arial", 14));
-                playersContainer.getChildren().add(noPlayers);
-            }
+                numberOfAvilablePlayers.setVisible(false); // Hide the "0 players" text
 
-            numberOfAvilablePlayers.setText(onlineCount + " Players currently online");
+                Label noPlayers = new Label("No other players currently online");
+                noPlayers.setTextFill(Color.WHITE);
+                noPlayers.setFont(Font.font("System", 16));
+                noPlayers.setStyle("-fx-alignment: CENTER; -fx-padding: 20;");
+                noPlayers.setMaxWidth(Double.MAX_VALUE);
+                noPlayers.setAlignment(Pos.CENTER);
+
+                playersContainer.getChildren().add(noPlayers);
+                playersContainer.setAlignment(Pos.CENTER);
+            } else {
+                numberOfAvilablePlayers.setVisible(true);
+                numberOfAvilablePlayers.setText(onlineCount + " Players currently online");
+                playersContainer.setAlignment(Pos.TOP_LEFT);
+            }
 
         } catch (Exception e) {
             System.out.println("Error parsing JSON from server: " + msg.getMessage());

@@ -157,7 +157,7 @@ public class AiGamePlayController implements Initializable  {
                 playerScore.setText(Integer.toString(game.getHumanScore()));
                 drawWinningLine('O');
                 try {
-                    if (dos != null) dos.writeBytes("=======You won=======");
+                    if (dos != null) dos.writeBytes("=======You won=======\n");
                 } catch (IOException ex) {
                     System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -169,7 +169,7 @@ public class AiGamePlayController implements Initializable  {
                 aiScore.setText(Integer.toString(game.getAiScore()));
                 drawWinningLine('X');
                 try {
-                    if (dos != null) dos.writeBytes("=======Ai won=======");
+                    if (dos != null) dos.writeBytes("=======Ai won=======\n");
                 } catch (IOException ex) {
                     System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -180,7 +180,7 @@ public class AiGamePlayController implements Initializable  {
         else if(game.isBoardFull()){
             game.incrementDrawScore();
             try {
-                if (dos != null) dos.writeBytes("=======Draw=======");
+                if (dos != null) dos.writeBytes("=======Draw=======\n");
             } catch (IOException ex) {
                 System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

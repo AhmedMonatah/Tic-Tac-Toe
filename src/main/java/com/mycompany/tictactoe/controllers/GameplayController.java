@@ -27,7 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
@@ -232,7 +231,7 @@ public class GameplayController implements Initializable {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
                     title.setText(player1.getText() + " Wins!");
                     try {
-                        if (dos != null) dos.writeBytes("======="+player1.getText()+" won=======");
+                        if (dos != null) dos.writeBytes("======="+player1.getText()+" won=======\n");
                     } catch (IOException ex) {
                          ex.printStackTrace();
                     }
@@ -240,7 +239,7 @@ public class GameplayController implements Initializable {
                     aiScore.setText(String.valueOf(gameModel.getP2Score()));
                     title.setText(player2.getText() + " Wins!");
                     try {
-                        if (dos != null) dos.writeBytes("======="+player2.getText()+" won=======");
+                        if (dos != null) dos.writeBytes("======="+player2.getText()+" won=======\n");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
