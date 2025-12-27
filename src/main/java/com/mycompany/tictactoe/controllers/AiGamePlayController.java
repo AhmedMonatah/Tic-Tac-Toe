@@ -127,6 +127,7 @@ public class AiGamePlayController implements Initializable  {
         System.out.println(btn);
         savedFile();
         recordMove(btn, "Player");
+        // Check indexing logic, assuming 'btnXY' format
         game.makeMove(btn.charAt(3)-'0', btn.charAt(4)-'0', 'O');
         
         if(!CheckWin('O')){
@@ -155,7 +156,7 @@ public class AiGamePlayController implements Initializable  {
                 playerScore.setText(Integer.toString(game.getHumanScore()));
                 drawWinningLine('O');
                 try {
-                    dos.writeBytes("=======You won=======");
+                    if (dos != null) dos.writeBytes("=======You won=======");
                 } catch (IOException ex) {
                     System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -167,7 +168,7 @@ public class AiGamePlayController implements Initializable  {
                 aiScore.setText(Integer.toString(game.getAiScore()));
                 drawWinningLine('X');
                 try {
-                    dos.writeBytes("=======Ai won=======");
+                    if (dos != null) dos.writeBytes("=======Ai won=======");
                 } catch (IOException ex) {
                     System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -178,7 +179,7 @@ public class AiGamePlayController implements Initializable  {
         else if(game.isBoardFull()){
             game.incrementDrawScore();
             try {
-                dos.writeBytes("=======Draw=======");
+                if (dos != null) dos.writeBytes("=======Draw=======");
             } catch (IOException ex) {
                 System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
@@ -282,15 +283,21 @@ public class AiGamePlayController implements Initializable  {
         PlayerData playerData = PlayerData.getInstance();
 
         if (playerData.isRecordMoves() && !isCreated) {
-            File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
-            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-            gameFile = new File(dir, time+"("+playerData.getDifficulty()+")" + ".txt");
+            File dir = new File(System.getProperty("user.home"), "Moves_Tic_Tac");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }            
+            
+            // Format: ahmed_vs_ai_1_12_2025.txt
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("d_M_yyyy"));
+            String playerName = playerData.getPlayerName();
+            if(playerName == null || playerName.isEmpty()) playerName = "Player";
+            
+            gameFile = new File(dir, playerName + "_vs_ai_" + time + ".txt");
 
             try {
                 fos = new FileOutputStream(gameFile, true);
                 dos = new DataOutputStream(fos);
-                
-
                 dos.flush();
 
                 isCreated = true;

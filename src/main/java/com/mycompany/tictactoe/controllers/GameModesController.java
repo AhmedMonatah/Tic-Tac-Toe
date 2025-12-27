@@ -6,6 +6,7 @@ package com.mycompany.tictactoe.controllers;
 
 import classes.AppConfig;
 import classes.AppRoute;
+import classes.SoundManager;
 import com.mycompany.tictactoe.App;
 import java.io.IOException;
 import java.net.URL;
@@ -23,10 +24,14 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -38,6 +43,9 @@ public class GameModesController implements Initializable {
 
     @FXML
     private Text usersName;
+    
+    @FXML
+    private ImageView soundIcon;
     /**
      * Initializes the controller class.
      */
@@ -78,6 +86,26 @@ public class GameModesController implements Initializable {
         controller.setStage(dialogStage);
 
         dialogStage.showAndWait();
+    }
+
+    @FXML
+    private void recordingButton(ActionEvent event) throws IOException {
+      App.setRoot("GameRecordings");
+    }
+
+    @FXML
+    private void onSoundToggle(MouseEvent event) {
+        SoundManager.toggleMute();
+
+        if (SoundManager.isMuted()) {
+            soundIcon.setImage(
+                new Image(getClass().getResource("/images/no-sound.png").toExternalForm())
+            );
+        } else {
+            soundIcon.setImage(
+                new Image(getClass().getResource("/images/sound.png").toExternalForm())
+            );
+        }
     }
 
 }
