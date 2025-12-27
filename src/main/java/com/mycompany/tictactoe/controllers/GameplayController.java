@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.mycompany.tictactoe.controllers;
-
+import classes.PlayerData;
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.Message;
