@@ -13,15 +13,14 @@ public class NetworkClient {
     private MessageListener listener;
     private Thread listenThread;
 
-    public boolean connect(String host, int port) {
+     public boolean connect(String host, int port) {
         try {
             socket = new Socket(host, port);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
+            writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
             startListening();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }

@@ -93,7 +93,6 @@ public class GameRecordingsController implements Initializable {
         }
     }
     
-    // Custom List Cell to display Play button with Glass styling
     private class RecordingListCell extends ListCell<String> {
         @Override
         protected void updateItem(String item, boolean empty) {
