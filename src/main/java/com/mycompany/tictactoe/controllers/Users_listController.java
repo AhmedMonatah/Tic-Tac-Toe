@@ -1,4 +1,5 @@
 package com.mycompany.tictactoe.controllers;
+
 import classes.PlayerData;
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
@@ -52,7 +53,7 @@ public class Users_listController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        welcomeText.setText("Welcome, " + AppConfig.CURRENT_USER );
+        welcomeText.setText("Welcome, " + AppConfig.CURRENT_USER);
         client.setListener(new MessageListener() {
             @Override
             public void onMessage(Message msg) {
@@ -104,9 +105,13 @@ public class Users_listController implements Initializable {
                     username = jsonArray.getString(i);
                 }
 
-                if (username.equals(AppConfig.CURRENT_USER)) continue;
+                // Extract score (default to 0 if missing or if using old format)
+                int score = (userObj != null) ? userObj.optInt("score", 0) : 0;
+
+                if (username.equals(AppConfig.CURRENT_USER))
+                    continue;
                 onlineCount++;
-                
+
                 HBox playerBox = new HBox();
                 playerBox.setAlignment(Pos.CENTER_LEFT);
                 playerBox.setSpacing(10);
@@ -121,6 +126,13 @@ public class Users_listController implements Initializable {
                 nameLabel.setTextFill(Color.BLACK);
                 nameLabel.setFont(Font.font("Arial", 16));
 
+                // NEW: Score Label
+                Label scoreLabel = new Label("Rate: " + score);
+                scoreLabel.setTextFill(Color.web("#fde047")); // Gold color
+                scoreLabel.setFont(Font.font("Arial", 14));
+                scoreLabel.setStyle(
+                        "-fx-font-weight: bold; -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 2, 0.0, 0, 1);");
+
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
@@ -128,7 +140,7 @@ public class Users_listController implements Initializable {
                 requestBtn.setDisable(!isAvailable); // Disable if busy
                 requestBtn.setOnAction(event -> sendGameRequest(username));
 
-                playerBox.getChildren().addAll(statusCircle, nameLabel, spacer, requestBtn);
+                playerBox.getChildren().addAll(statusCircle, nameLabel, scoreLabel, spacer, requestBtn);
                 playersContainer.getChildren().add(playerBox);
             }
 
@@ -147,18 +159,16 @@ public class Users_listController implements Initializable {
         }
     }
 
-
     private void sendGameRequest(String toUser) {
         JSONObject req = new JSONObject();
         req.put("action", "game_request");
         req.put("from", AppConfig.CURRENT_USER);
         req.put("to", toUser);
-        
+
         System.out.println("Game request from: " + AppConfig.CURRENT_USER);
         client.sendRaw(req.toString());
     }
 
-    
     private void showGameRequest(Message msg) {
         JSONObject json = msg.getRawJson();
         String fromUser = json.getString("from");
@@ -166,22 +176,23 @@ public class Users_listController implements Initializable {
 
         if (AppConfig.CURRENT_USER != null && AppConfig.CURRENT_USER.equals(toUser)) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoe/views/GameRequest.fxml"));
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/mycompany/tictactoe/views/GameRequest.fxml"));
                 Parent root = loader.load();
 
                 GameRequestController controller = loader.getController();
-                
+
                 Stage dialog = new Stage();
                 dialog.initModality(Modality.APPLICATION_MODAL);
                 dialog.initStyle(StageStyle.TRANSPARENT);
-                
+
                 Scene scene = new Scene(root);
                 scene.setFill(Color.TRANSPARENT);
                 dialog.setScene(scene);
-                
+
                 controller.setDialogStage(dialog);
                 controller.setFromUser(fromUser);
-                
+
                 controller.setOnAccept((record) -> handleAcceptRequest(fromUser, record));
                 controller.setOnDecline(() -> handleDeclineRequest(fromUser));
 
@@ -197,16 +208,16 @@ public class Users_listController implements Initializable {
         JSONObject req = new JSONObject();
         req.put("response", "accept");
         req.put("recording", record);
-        
+
         try {
-            PlayerData.getInstance().setRecordMoves(record); 
-            
+            PlayerData.getInstance().setRecordMoves(record);
+
             AppConfig.IS_ONLINE = true;
             AppConfig.OPPONENT = fromUser;
             AppConfig.AM_I_X = false;
-            
+
             App.setRoot("GamePlay");
-            
+
             req.put("action", "request_response");
             req.put("from", AppConfig.CURRENT_USER);
             req.put("to", fromUser);
@@ -221,13 +232,13 @@ public class Users_listController implements Initializable {
         JSONObject req = new JSONObject();
         req.put("response", "decline");
         req.put("recording", false);
-        
+
         req.put("action", "request_response");
         req.put("from", AppConfig.CURRENT_USER);
         req.put("to", fromUser);
         client.sendRaw(req.toString());
     }
-    
+
     private void handleRequestResponse(Message msg) {
         JSONObject json = msg.getRawJson();
         String fromUser = json.getString("from");
@@ -257,20 +268,20 @@ public class Users_listController implements Initializable {
             System.out.println("DEBUG: Condition failed. Current user doesn't match toUser.");
         }
     }
-    
+
     @FXML
     private void BackToMenu() {
         try {
             JSONObject logout = new JSONObject();
             logout.put("action", "logout");
             logout.put("username", AppConfig.CURRENT_USER);
-            
+
             client.sendRaw(logout.toString());
-            
+
             Stage stage = (Stage) numberOfAvilablePlayers.getScene().getWindow();
             new AppRoute().goToStartPage(stage);
-            
-            client.disconnect(); 
+
+            client.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
