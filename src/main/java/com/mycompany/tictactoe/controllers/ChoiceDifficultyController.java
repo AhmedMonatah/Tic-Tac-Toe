@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.input.MouseEvent;
 
 /**
  * FXML Controller class
@@ -40,6 +41,12 @@ public class ChoiceDifficultyController implements Initializable {
     @FXML
     private void hardMode(ActionEvent event) throws IOException {
         App.setRoot("Player_vs_Ai_Hard");
+    }
+
+    @FXML
+    private void handleBack(MouseEvent event) throws IOException {
+
+        App.setRoot("GameMode");
     }
     
 }

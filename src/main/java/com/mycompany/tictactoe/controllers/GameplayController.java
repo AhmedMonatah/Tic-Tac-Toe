@@ -4,11 +4,9 @@
  */
 package com.mycompany.tictactoe.controllers;
 
-import classes.PlayerData;
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.Message;
-import classes.User;
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
 import java.io.DataOutputStream;
@@ -44,6 +42,7 @@ import org.json.JSONObject;
  * @author Ahmed
  */
 public class GameplayController implements Initializable {
+
     private GameModel gameModel;
 
     private static boolean xStartsNext = false;
@@ -97,7 +96,7 @@ public class GameplayController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameModel = new GameModel();
-        User.setAvailable(false);
+
         if (AppConfig.IS_ONLINE) {
             setupOnlineGame();
         }
@@ -113,7 +112,7 @@ public class GameplayController implements Initializable {
     private void startNewGame() {
 
         gameModel.startNewGame();
-        User.setAvailable(false);
+
         if (!xStartsNext) {
             gameModel.switchTurn();
         }
@@ -217,18 +216,18 @@ public class GameplayController implements Initializable {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
                     title.setText(player1.getText() + " Wins!");
                     try {
-                        dos.writeBytes("======="+player1.getText()+" won=======");
+                        if (dos != null) dos.writeBytes("======="+player1.getText()+" won=======");
                     } catch (IOException ex) {
-                        System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                         ex.printStackTrace();
                     }
                     gameModel.showVideoInDialog();
                 } else {
                     aiScore.setText(String.valueOf(gameModel.getP2Score()));
                     title.setText(player2.getText() + " Wins!");
                     try {
-                        dos.writeBytes("======="+player2.getText()+" won=======");
+                        if (dos != null) dos.writeBytes("======="+player2.getText()+" won=======");
                     } catch (IOException ex) {
-                        System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                        ex.printStackTrace();
                     }
                     gameModel.showVideoInDialog();
                 }
@@ -362,7 +361,6 @@ public class GameplayController implements Initializable {
     @FXML
     private void newRound(ActionEvent event) {
         if (AppConfig.IS_ONLINE) {
-            User.setAvailable(true);
             JSONObject json = new JSONObject();
             json.put("action", "new_round_request");
             json.put("to", AppConfig.OPPONENT);
@@ -384,45 +382,43 @@ public class GameplayController implements Initializable {
                 json.put("action", "player_left");
                 json.put("to", AppConfig.OPPONENT);
                 AppConfig.CLIENT.sendRaw(json.toString());
-                User.setAvailable(true);
+
                 AppConfig.IS_ONLINE = false;
             }
 
             App.setRoot("GameMode");
         } catch (IOException ex) {
-            System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            ex.printStackTrace();
         }
     }
 
-    @FXML
-    private void logout(ActionEvent event) {
-        try {
-            if (AppConfig.IS_ONLINE) {
-                JSONObject json = new JSONObject();
-                json.put("action", "player_left");
-                json.put("to", AppConfig.OPPONENT);
-                AppConfig.CLIENT.sendRaw(json.toString());
-                User.setAvailable(true);
-                AppConfig.IS_ONLINE = false;
-                App.setRoot("Users_list");
-            } else {
-                App.setRoot("Player1_vs_Player2");
-            }
-        } catch (IOException ex) {
-            System.getLogger(GameplayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+   @FXML
+private void logout(ActionEvent event) {
+    try {
+        if (AppConfig.IS_ONLINE) {
+            JSONObject json = new JSONObject();
+            json.put("action", "player_left");
+            json.put("username", AppConfig.CURRENT_USER); 
+            json.put("to", AppConfig.OPPONENT);
+            AppConfig.CLIENT.sendRaw(json.toString()); 
+
+            AppConfig.IS_ONLINE = false;
+            App.setRoot("Users_list");
+        } else {
+            App.setRoot("Player1_vs_Player2");
         }
+    } catch (IOException ex) {
+        ex.printStackTrace();
     }
+}
 
     private void setupOnlineGame() {
         startNewGame();
         String opponent = AppConfig.OPPONENT;
-        
         if (AppConfig.AM_I_X) {
-            // I am X (Player 1). Opponent is O (Player 2).
             player1.setText(AppConfig.CURRENT_USER);
             player2.setText(opponent);
         } else {
-            // I am O (Player 2). Opponent is X (Player 1).
             player1.setText(opponent);
             player2.setText(AppConfig.CURRENT_USER);
         }
@@ -474,16 +470,26 @@ public class GameplayController implements Initializable {
                         title.setText("Request Declined");
                         showInfo(AppConfig.OPPONENT + " declined to play another round.");
                     });
-                    User.setAvailable(true);
                     break;
                 case "player_left":
                     Platform.runLater(() -> {
                         showInfo("Player " + AppConfig.OPPONENT + " left the game.");
                         try {
-                            dos.writeBytes(AppConfig.OPPONENT+" left the game");
+                            if (dos != null) dos.writeBytes(AppConfig.OPPONENT+" left the game");
                             AppConfig.IS_ONLINE = false;
                             App.setRoot("Users_list");
-                            User.setAvailable(true);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    break;
+                case "server_stopped":
+                    Platform.runLater(() -> {
+                        showInfo("Server has stopped. Disconnecting...");
+                        try {
+                            AppConfig.IS_ONLINE = false;
+                            if (dos != null) dos.close();
+                            App.setRoot("Users_list"); 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -500,8 +506,6 @@ public class GameplayController implements Initializable {
             int y = json.getInt("y");
             Button btn = getButton(x, y);
             if (btn != null) {
-                //savedFile();
-                //recordMove(msg.getUsername(),btn.getId());
                 handleMoveInternal(btn, x, y, true);
                 
                 
@@ -515,25 +519,29 @@ public class GameplayController implements Initializable {
         PlayerData playerData = PlayerData.getInstance();    
 
          if (playerData.isRecordMoves() && !isCreated) {
-            System.out.println("ON2");
-            File dir = new File("C:/Users/LENOVO/Desktop/Moves_Tic_Tac/");
+            File dir = new File(
+                    System.getProperty("user.home"),
+                    "Moves_Tic_Tac"
+            );
             if (!dir.exists()) dir.mkdirs();
-            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-            gameFile = new File(dir, time + "(" + player1.getText() + "-" + "Vs"+"-" + player2.getText() + ")" + ".txt");
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("d_M_yyyy"));
+            
+            String p1 = player1.getText();
+            String p2 = player2.getText();
+            
+            gameFile = new File(dir, p1 + "_vs_" + p2 + "_" + time + ".txt");
 
             try {
                 fos = new FileOutputStream(gameFile, true);
                 dos = new DataOutputStream(fos);
-
                 dos.flush();
-
                 isCreated = true;
                 isRecording = true;
 
             } catch (FileNotFoundException ex) {
-                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                ex.printStackTrace();
             } catch (IOException ex) {
-                System.getLogger(AiGamePlayController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                ex.printStackTrace();
             }
 
         }
@@ -541,13 +549,11 @@ public class GameplayController implements Initializable {
 
     private void recordMove(String buttonId, String player) {         
           if (isRecording && dos != null) {
-             System.out.println("ON4");
             try {
 
                 String move = player + " clicked: " + buttonId + "\n";
                 dos.writeBytes(move);
                 dos.flush();
-                System.out.println("Recorded: " + move);
             } catch (IOException ex) {
                 System.err.println("Error recording move: " + ex.getMessage());
             }

@@ -4,17 +4,19 @@
  */
 package com.mycompany.tictactoe.models;
 
-import java.io.File;
+import classes.SoundManager;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 
 /**
  *
@@ -168,36 +170,50 @@ public class GameModel {
             this.index = index;
         }
     }
-    
     public void showVideoInDialog() {
-        System.out.println("Winnig...........");
-        Platform.runLater(()->{
-             Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Video Player");
-        alert.setHeaderText("Playing Video");
+    Platform.runLater(() -> {
 
-        String videoPath = new File("/E://down//vid//Download.mp4").toURI().toString(); // Your video path
-        Media media = new Media(videoPath);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        MediaView mediaView = new MediaView(mediaPlayer);
-        mediaView.setFitWidth(600);
-        mediaView.setFitHeight(400);
-        mediaView.setPreserveRatio(true);
+        SoundManager.pauseBackground();
 
-        VBox videoContainer = new VBox(10, mediaView);
-        videoContainer.setPadding(new Insets(10));
+        Stage videoStage = new Stage();
+        videoStage.initModality(Modality.APPLICATION_MODAL);
+        videoStage.setTitle("Winner Video");
 
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setContent(videoContainer);
-        dialogPane.setPrefSize(650, 500);
+        try {
+            InputStream is = getClass().getResourceAsStream("/video/winner.mp4");
+            Path tempVideo = Files.createTempFile("winner_video", ".mp4");
+            Files.copy(is, tempVideo, StandardCopyOption.REPLACE_EXISTING);
+            tempVideo.toFile().deleteOnExit();
 
-        alert.initModality(Modality.APPLICATION_MODAL);
+            Media media = new Media(tempVideo.toUri().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
 
-        alert.setOnShown(e -> mediaPlayer.play());
+            mediaView.setPreserveRatio(false);
 
-        alert.setOnCloseRequest(e -> mediaPlayer.stop());
+            StackPane root = new StackPane(mediaView);
+            Scene scene = new Scene(root, 650, 450);
 
-        alert.showAndWait();
-        });
-    }
+            mediaView.fitWidthProperty().bind(scene.widthProperty());
+            mediaView.fitHeightProperty().bind(scene.heightProperty());
+
+            videoStage.setScene(scene);
+
+            videoStage.setOnShown(e -> mediaPlayer.play());
+
+            videoStage.setOnCloseRequest(e -> {
+                mediaPlayer.stop();
+                mediaPlayer.dispose();   
+                SoundManager.resumeBackground();
+            });
+
+            videoStage.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    });
+}
+
+
 }

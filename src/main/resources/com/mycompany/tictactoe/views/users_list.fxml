@@ -19,8 +19,9 @@
    <center>
       <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5">
                <children>
+                  <!-- HBox for title -->
                   <HBox alignment="CENTER" prefHeight="79.0" prefWidth="900.0">
                      <children>
                         <ImageView fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -38,6 +39,15 @@
                         </Text>
                      </children>
                   </HBox>
+
+                  <!-- Welcome Text -->
+                  <Text fx:id="welcomeText" fill="#ffffff" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER">
+                     <font>
+                        <Font size="20.0"/>
+                     </font>
+                  </Text>
+
+                  <!-- Number of players online -->
                   <Text fx:id="numberOfAvilablePlayers" fill="#fccee8" strokeType="OUTSIDE" strokeWidth="0.0" text="0 Players currently online" textAlignment="CENTER">
                      <font>
                         <Font size="14.0" />
@@ -49,6 +59,7 @@
                </padding>
             </VBox>
 
+            <!-- ScrollPane for players list -->
             <StackPane prefHeight="587.0" prefWidth="860.0">
                <StackPane.margin>
                   <Insets bottom="70.0" left="20.0" right="20.0" top="120.0"/>
@@ -71,6 +82,7 @@
                </children>
             </StackPane>
 
+            <!-- Back button -->
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#BackToMenu" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: rgba(255,255,255,0.15); -fx-border-color: rgba(255,255,255,0.7); -fx-border-radius: 5;" text="Back To Menu" StackPane.alignment="BOTTOM_CENTER">
                <StackPane.margin>
                   <Insets bottom="20.0" top="0.0" left="0.0" right="0.0"/>

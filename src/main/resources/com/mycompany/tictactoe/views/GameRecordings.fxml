@@ -12,10 +12,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%,#7A3DF0 65%,#205CFC 100% );;" stylesheets="@../../../../styles/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.GameRecordingsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%,#7A3DF0 65%,#205CFC 100%);" stylesheets="@../../../../styles/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.GameRecordingsController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
+            <!-- Header -->
             <HBox alignment="CENTER" maxHeight="50.0" maxWidth="200.0" prefHeight="50.0" prefWidth="200.0">
                <children>
                   <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -33,24 +34,31 @@
                   </Text>
                </children>
             </HBox>
-            <Text fill="#a2eafc" strokeType="OUTSIDE" strokeWidth="0.0" text="6 Recordings available">
+
+            <!-- Subtitle -->
+            <Text fx:id="recordCountText" fill="#a2eafc" strokeType="OUTSIDE" strokeWidth="0.0" text="0 Recordings available">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
+
+            <!-- ListView Container -->
             <StackPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
                <children>
                   <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff32" height="400.0" stroke="#ffffff80" strokeType="INSIDE" width="600.0" />
-                  <ListView fx:id="recordsListView" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: transparent; -fx-control-inner-background: -fx-control-inner-background; -fx-border-color: transparent;" StackPane.alignment="CENTER">
+                  <ListView fx:id="recordsListView" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10;" StackPane.alignment="CENTER">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding></ListView>
+                     </padding>
+                  </ListView>
                </children>
             </StackPane>
-            <Button mnemonicParsing="false" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 10; -fx-border-color: rgba(255, 255, 255, 0.5); -fx-border-radius: 10; -fx-cursor: hand;" text="Back to Menu">
+
+            <!-- Back Button -->
+            <Button mnemonicParsing="false" onAction="#onBack" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 10; -fx-border-color: rgba(255, 255, 255, 0.5); -fx-border-radius: 10; -fx-cursor: hand;" text="Back to Menu">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
