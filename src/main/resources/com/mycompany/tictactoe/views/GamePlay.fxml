@@ -98,11 +98,6 @@
                         <DropShadow color="#ffffff4d" height="40.0" radius="20.0" width="40.0" />
                      </effect>
                      <children>
-      <Button fx:id="btn00" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn00" prefHeight="75" prefWidth="75" style="-fx-background-color: transparent; -fx-border-width: 1; -fx-border-radius: 6; -fx-background-insets: 0; -fx-border-insets: 0; -fx-padding: 0; -fx-font-size: 38; -fx-font-weight: bold; -fx-text-fill: #67e8f9; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" text="X" GridPane.columnIndex="0" GridPane.rowIndex="0">
-          <effect>
-              <DropShadow color="#67e8f9" radius="5" />
-          </effect>
-      </Button>
                    <Button fx:id="btn10" mnemonicParsing="false" onAction="#btn10" prefHeight="75.0" prefWidth="75.0" style=" -fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="1" />
                         <Button fx:id="btn20" mnemonicParsing="false" onAction="#btn20" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.columnIndex="2" />
                         <Button fx:id="btn01" mnemonicParsing="false" onAction="#btn01" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: transparent;  -fx-border-color: rgba(255,255,255,0.4);  -fx-border-width: 1; -fx-border-radius: 6;  -fx-background-insets: 0; -fx-border-insets: 0;   -fx-padding: 0; -fx-font-size: 38;   -fx-font-weight: bold;   -fx-text-fill: #67e8f9; -fx-focus-color: transparent;  -fx-faint-focus-color: transparent;" GridPane.rowIndex="1" />

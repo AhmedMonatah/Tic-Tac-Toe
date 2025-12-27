@@ -3,10 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.mycompany.tictactoe.controllers;
-import classes.PlayerData;
+
 import static classes.AlertUtils.showInfo;
 import classes.AppConfig;
 import classes.Message;
+import classes.PlayerData;
 import com.mycompany.tictactoe.App;
 import com.mycompany.tictactoe.models.GameModel;
 import java.io.DataOutputStream;
@@ -211,6 +212,21 @@ public class GameplayController implements Initializable {
                 if (info != null) {
                     drawWinningLine(info.type, info.index);
                 }
+                
+                if (AppConfig.IS_ONLINE) {
+                    boolean iWon = (gameModel.isPlayer1Turn() && AppConfig.AM_I_X) 
+                                || (!gameModel.isPlayer1Turn() && !AppConfig.AM_I_X);
+                    if (iWon) {
+                        try {
+                            JSONObject points = new JSONObject();
+                            points.put("action", "update_score");
+                            points.put("username", AppConfig.CURRENT_USER);
+                            AppConfig.CLIENT.sendRaw(points.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
                 if (gameModel.isPlayer1Turn()) {
                     playerScore.setText(String.valueOf(gameModel.getP1Score()));
@@ -220,7 +236,6 @@ public class GameplayController implements Initializable {
                     } catch (IOException ex) {
                          ex.printStackTrace();
                     }
-                    gameModel.showVideoInDialog();
                 } else {
                     aiScore.setText(String.valueOf(gameModel.getP2Score()));
                     title.setText(player2.getText() + " Wins!");
@@ -229,10 +244,20 @@ public class GameplayController implements Initializable {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    gameModel.showVideoInDialog();
                 }
 
-                if (player1.getText() == null ? AppConfig.CURRENT_USER == null : player1.getText().equals(AppConfig.CURRENT_USER)) {
+                boolean showVideo = false;
+                if (AppConfig.IS_ONLINE) {
+                    boolean isP1Winner = gameModel.isPlayer1Turn();
+                    boolean iAmP1 = AppConfig.AM_I_X;
+                    if ((iAmP1 && isP1Winner) || (!iAmP1 && !isP1Winner)) {
+                        showVideo = true;
+                    }
+                } else {
+                    showVideo = true;
+                }
+
+                if (showVideo) {
                     gameModel.showVideoInDialog();
                 }
 
@@ -506,6 +531,7 @@ private void logout(ActionEvent event) {
             int y = json.getInt("y");
             Button btn = getButton(x, y);
             if (btn != null) {
+ 
                 handleMoveInternal(btn, x, y, true);
                 
                 
@@ -519,6 +545,7 @@ private void logout(ActionEvent event) {
         PlayerData playerData = PlayerData.getInstance();    
 
          if (playerData.isRecordMoves() && !isCreated) {
+            // System.out.println("ON2");
             File dir = new File(
                     System.getProperty("user.home"),
                     "Moves_Tic_Tac"
@@ -534,7 +561,9 @@ private void logout(ActionEvent event) {
             try {
                 fos = new FileOutputStream(gameFile, true);
                 dos = new DataOutputStream(fos);
+
                 dos.flush();
+
                 isCreated = true;
                 isRecording = true;
 

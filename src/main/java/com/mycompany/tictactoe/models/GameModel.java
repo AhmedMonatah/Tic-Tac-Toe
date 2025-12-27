@@ -32,6 +32,9 @@ public class GameModel {
     private int drawScore;
 
     private WinningLineInfo winningLineInfo;
+    
+    // Cache the video path to avoid re-extracting it every time
+    private static Path cachedVideoPath = null;
 
     public GameModel() {
         board = new int[3][3];
@@ -170,50 +173,59 @@ public class GameModel {
             this.index = index;
         }
     }
+    
     public void showVideoInDialog() {
-    Platform.runLater(() -> {
+        Platform.runLater(() -> {
 
-        SoundManager.pauseBackground();
+            SoundManager.pauseBackground();
 
-        Stage videoStage = new Stage();
-        videoStage.initModality(Modality.APPLICATION_MODAL);
-        videoStage.setTitle("Winner Video");
+            Stage videoStage = new Stage();
+            videoStage.initModality(Modality.APPLICATION_MODAL);
+            videoStage.setTitle("Winner Video");
 
-        try {
-            InputStream is = getClass().getResourceAsStream("/video/winner.mp4");
-            Path tempVideo = Files.createTempFile("winner_video", ".mp4");
-            Files.copy(is, tempVideo, StandardCopyOption.REPLACE_EXISTING);
-            tempVideo.toFile().deleteOnExit();
+            try {
+                if (cachedVideoPath == null || !Files.exists(cachedVideoPath)) {
+                    InputStream is = getClass().getResourceAsStream("/video/winner.mp4");
+                    if (is != null) {
+                        cachedVideoPath = Files.createTempFile("winner_video", ".mp4");
+                        Files.copy(is, cachedVideoPath, StandardCopyOption.REPLACE_EXISTING);
+                        cachedVideoPath.toFile().deleteOnExit();
+                    } else {
+                        System.err.println("Could not find video resource: /video/winner.mp4");
+                        SoundManager.resumeBackground();
+                        return;
+                    }
+                }
 
-            Media media = new Media(tempVideo.toUri().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            MediaView mediaView = new MediaView(mediaPlayer);
+                Media media = new Media(cachedVideoPath.toUri().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(mediaPlayer);
 
-            mediaView.setPreserveRatio(false);
+                mediaView.setPreserveRatio(false);
 
-            StackPane root = new StackPane(mediaView);
-            Scene scene = new Scene(root, 650, 450);
+                StackPane root = new StackPane(mediaView);
+                Scene scene = new Scene(root, 650, 450);
 
-            mediaView.fitWidthProperty().bind(scene.widthProperty());
-            mediaView.fitHeightProperty().bind(scene.heightProperty());
+                mediaView.fitWidthProperty().bind(scene.widthProperty());
+                mediaView.fitHeightProperty().bind(scene.heightProperty());
 
-            videoStage.setScene(scene);
+                videoStage.setScene(scene);
 
-            videoStage.setOnShown(e -> mediaPlayer.play());
+                videoStage.setOnShown(e -> mediaPlayer.play());
 
-            videoStage.setOnCloseRequest(e -> {
-                mediaPlayer.stop();
-                mediaPlayer.dispose();   
-                SoundManager.resumeBackground();
-            });
+                videoStage.setOnCloseRequest(e -> {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose();   
+                    SoundManager.resumeBackground();
+                });
 
-            videoStage.showAndWait();
+                videoStage.showAndWait();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    });
-}
-
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                SoundManager.resumeBackground(); 
+            }
+        });
+    }
 
 }
