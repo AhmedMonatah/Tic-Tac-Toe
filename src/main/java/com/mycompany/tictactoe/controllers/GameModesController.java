@@ -65,11 +65,13 @@ public class GameModesController implements Initializable {
         );
 
         Stage dialogStage = new Stage();
+        
         dialogStage.setScene(new Scene(loader.load()));
         dialogStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        dialogStage.getIcons().add( new Image(App.class.getResourceAsStream("/images/logo.png")));
+        dialogStage.setTitle("Online Connection");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.setResizable(false);
-        dialogStage.setTitle("Online Connection");
 
         OnlineDialogController controller = loader.getController();
         controller.setStage(dialogStage);

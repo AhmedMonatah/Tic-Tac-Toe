@@ -30,34 +30,48 @@ public class NetworkClient {
     }
 
     private void startListening() {
-        listenThread = new Thread(() -> {
-            try {
-                while (isConnected()) {
-                    String jsonStr = reader.readLine();
-                    if (jsonStr == null) break;
-
-                    System.out.println("Received: " + jsonStr);
-
-                    JSONObject json = new JSONObject(jsonStr);
-                    Message msg = new Message();
-                    msg.setAction(json.optString("action"));
-                    msg.setSuccess(json.optBoolean("success"));
-                    msg.setUsername(json.optString("username"));
-                    // Fix: Extract message field so alerts can show it
-                    msg.setMessage(json.optString("message")); 
-                    msg.setRawJson(json);
-
-                    if (listener != null) {
-                        listener.onMessage(msg);
-                    }
+    listenThread = new Thread(() -> {
+        try {
+            while (isConnected()) {
+                String jsonStr = reader.readLine();
+                
+                if (jsonStr == null) {
+                    handleServerDisconnection();
+                    break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
-        listenThread.setDaemon(true);
-        listenThread.start();
+                System.out.println("Received: " + jsonStr);
+                JSONObject json = new JSONObject(jsonStr);
+                Message msg = new Message();
+                msg.setAction(json.optString("action"));
+                msg.setSuccess(json.optBoolean("success"));
+                msg.setUsername(json.optString("username"));
+                msg.setMessage(json.optString("message")); 
+                msg.setRawJson(json);
+
+                if (listener != null) {
+                    listener.onMessage(msg);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Network error: Server lost.");
+            handleServerDisconnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+
+    listenThread.setDaemon(true);
+    listenThread.start();
+}
+
+    private void handleServerDisconnection() {
+        if (listener != null) {
+            Message disconnectionMsg = new Message();
+            disconnectionMsg.setAction("server_stopped"); 
+            listener.onMessage(disconnectionMsg);
+        }
+        disconnect(); 
     }
 
     public boolean isConnected() {

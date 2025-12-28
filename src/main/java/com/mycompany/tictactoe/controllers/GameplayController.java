@@ -509,11 +509,11 @@ private void logout(ActionEvent event) {
                     break;
                 case "server_stopped":
                     Platform.runLater(() -> {
-                        showInfo("Server has stopped. Disconnecting...");
+                        showInfo("Lost connection to server."); 
                         try {
                             AppConfig.IS_ONLINE = false;
                             if (dos != null) dos.close();
-                            App.setRoot("Users_list"); 
+                            App.setRoot("users_list"); 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -544,7 +544,6 @@ private void logout(ActionEvent event) {
         PlayerData playerData = PlayerData.getInstance();    
 
          if (playerData.isRecordMoves() && !isCreated) {
-            // System.out.println("ON2");
             File dir = new File(
                     System.getProperty("user.home"),
                     "Moves_Tic_Tac"
