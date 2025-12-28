@@ -93,7 +93,13 @@ A full-featured **Tic Tac Toe desktop game** built with **JavaFX**, supporting *
 ### Game Records
 <img src="https://github.com/user-attachments/assets/2b5c29c7-5fac-4877-9ad6-c2ab8b17a050" width="600" />
 
+## 👥 Team Members
 
+- Omar Khaled
+- Ahmed Mohamed
+- Andrew Magdy
+- Sherry Ahmos
+  
 ## 🧩 Project Structure
 
 ```text
