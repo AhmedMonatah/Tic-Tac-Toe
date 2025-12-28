@@ -12,7 +12,7 @@ public class AppConfig {
     public static String SERVER_IP;
     public static NetworkClient CLIENT; 
     public static String CURRENT_USER;
-    
+    public static int CURRENT_SCORE = 0;
     // Online Game State
     public static boolean IS_ONLINE = false;
     public static String OPPONENT = "";
@@ -33,4 +33,5 @@ public class AppConfig {
         CURRENT_USER = currentUser;
         System.out.println("Set CURREN_USER: "+ CURRENT_USER);
     }
+   
 }

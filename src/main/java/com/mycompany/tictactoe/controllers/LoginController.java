@@ -37,19 +37,25 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         client.setListener(msg -> {
-            if ("login_response".equals(msg.getAction())) {
-                javafx.application.Platform.runLater(() -> {
-                    if (msg.isSuccess()) {
-                        AppConfig.setCurrentUser(msg.getUsername());
-                        showInfo("Login successful!");
-                        Stage stage = (Stage) username.getScene().getWindow();
-                        new AppRoute().goToUserListPage(stage);
-                    } else {
-                        showError(msg.getMessage());
+        if ("login_response".equals(msg.getAction())) {
+            javafx.application.Platform.runLater(() -> {
+                if (msg.isSuccess()) {
+                    AppConfig.setCurrentUser(msg.getUsername());
+
+                    if (msg.getRawJson() != null) {
+                        int score = msg.getRawJson().optInt("score", 0);
+                        AppConfig.CURRENT_SCORE = score; 
                     }
-                });
-            }
-        });
+
+                    showInfo("Login successful!");
+                    Stage stage = (Stage) username.getScene().getWindow();
+                    new AppRoute().goToUserListPage(stage);
+                } else {
+                    showError(msg.getMessage());
+                }
+            });
+        }
+    });
     }
 
     @FXML

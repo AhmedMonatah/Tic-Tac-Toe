@@ -50,10 +50,14 @@ public class Users_listController implements Initializable {
     private NetworkClient client = AppConfig.CLIENT;
     @FXML
     private Text welcomeText;
-
+    @FXML
+    private Text currentUserScore;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         welcomeText.setText("Welcome, " + AppConfig.CURRENT_USER);
+        if (currentUserScore != null) {
+        currentUserScore.setText(String.valueOf(AppConfig.CURRENT_SCORE));
+        }
         client.setListener(new MessageListener() {
             @Override
             public void onMessage(Message msg) {
@@ -94,7 +98,6 @@ public class Users_listController implements Initializable {
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject userObj = jsonArray.optJSONObject(i);
-                // Handle both String (old format) and JSONObject (new format with status)
                 String username;
                 boolean isAvailable = true;
 
@@ -105,11 +108,8 @@ public class Users_listController implements Initializable {
                     username = jsonArray.getString(i);
                 }
 
-                // Extract score (default to 0 if missing or if using old format)
                 int score = (userObj != null) ? userObj.optInt("score", 0) : 0;
-
-                if (username.equals(AppConfig.CURRENT_USER))
-                    continue;
+                
                 onlineCount++;
 
                 // Root Container for the Item (StackPane for layering background)
@@ -130,12 +130,10 @@ public class Users_listController implements Initializable {
                 contentBox.setSpacing(15);
                 contentBox.setPadding(new Insets(0, 20, 0, 25)); // Top, Right, Bottom, Left
 
-                // 1. Status Circle
                 Circle statusCircle = new Circle(6, isAvailable ? Color.LIMEGREEN : Color.RED);
                 statusCircle.setStroke(Color.WHITE);
                 statusCircle.setStrokeWidth(1);
 
-                // 2. Info VBox (Name + Score)
                 VBox infoBox = new VBox();
                 infoBox.setAlignment(Pos.CENTER_LEFT);
                 infoBox.setSpacing(2);
@@ -150,11 +148,9 @@ public class Users_listController implements Initializable {
 
                 infoBox.getChildren().addAll(nameLabel, scoreLabel);
 
-                // 3. Spacer
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
-                // 4. Request Button
                 Button requestBtn = new Button(isAvailable ? "Request" : "Busy");
                 requestBtn.setDisable(!isAvailable);
                 requestBtn.setPrefWidth(95);
@@ -176,7 +172,7 @@ public class Users_listController implements Initializable {
             }
 
             if (onlineCount == 0) {
-                numberOfAvilablePlayers.setVisible(false); // Hide the "0 players" text
+                numberOfAvilablePlayers.setVisible(false); 
 
                 Label noPlayers = new Label("No other players currently online");
                 noPlayers.setTextFill(Color.WHITE);

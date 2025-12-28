@@ -416,25 +416,33 @@ public class GameplayController implements Initializable {
         }
     }
 
-   @FXML
-private void logout(ActionEvent event) {
-    try {
-        if (AppConfig.IS_ONLINE) {
-            JSONObject json = new JSONObject();
-            json.put("action", "player_left");
-            json.put("username", AppConfig.CURRENT_USER); 
-            json.put("to", AppConfig.OPPONENT);
-            AppConfig.CLIENT.sendRaw(json.toString()); 
+    @FXML
+    private void logout(ActionEvent event) {
+        Platform.runLater(() -> {
+            try {
+                if (AppConfig.IS_ONLINE) {
+                    if (AppConfig.CLIENT != null && AppConfig.CLIENT.isConnected()) {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "player_left");
+                        json.put("username", AppConfig.CURRENT_USER); 
+                        json.put("to", AppConfig.OPPONENT);
+                        AppConfig.CLIENT.sendRaw(json.toString());
+                    }
 
-            AppConfig.IS_ONLINE = false;
-            App.setRoot("Users_list");
-        } else {
-            App.setRoot("Player1_vs_Player2");
-        }
-    } catch (IOException ex) {
-        ex.printStackTrace();
+                    AppConfig.IS_ONLINE = false;
+                }
+
+                if (dos != null) {
+                    dos.close();
+                    dos = null; 
+                }
+                App.setRoot("users_list");
+            } catch (Exception ex) {
+                System.err.println("Logout Error: " + ex.getMessage());
+                try { App.setRoot("users_list"); } catch (IOException e) {}
+            }
+        });
     }
-}
 
     private void setupOnlineGame() {
         startNewGame();
