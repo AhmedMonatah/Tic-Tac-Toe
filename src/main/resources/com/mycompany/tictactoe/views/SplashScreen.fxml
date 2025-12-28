@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E40078 0%, #C800B0 40%, #7A3DF0 65%, #205CFC 100%);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.SplashController">
+   <children>
+      <!-- Background Shapes -->
+      <Circle fill="#ffffff1a" layoutX="800.0" layoutY="100.0" radius="180.0" stroke="TRANSPARENT" />
+      <Circle fill="#ffffff0d" layoutX="100.0" layoutY="500.0" radius="250.0" stroke="TRANSPARENT" />
+      <Line endX="400.0" layoutX="450.0" layoutY="300.0" rotate="45.0" startX="-400.0" stroke="#ffffff1a" strokeWidth="2.0" />
+      <Line endX="400.0" layoutX="450.0" layoutY="300.0" rotate="-45.0" startX="-400.0" stroke="#ffffff1a" strokeWidth="2.0" />
+
+      <!-- Center Card -->
+      <StackPane layoutX="0.0" layoutY="0.0" prefHeight="600.0" prefWidth="900.0">
+         <children>
+            <Pane fx:id="contentPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="350.0" prefWidth="600.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 30; -fx-border-color: rgba(255, 255, 255, 0.3); -fx-border-radius: 30; -fx-border-width: 1.5;">
+               <effect>
+                  <DropShadow color="#0000004d" height="40.0" radius="19.5" width="40.0" />
+               </effect>
+               <children>
+                  <!-- Title -->
+                  <Text fill="WHITE" layoutX="128.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TIC TAC TOE">
+                     <font>
+                        <Font name="Verdana Bold" size="50.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.5" />
+                     </effect>
+                  </Text>
+                  
+                  <Line endX="200.0" layoutX="300.0" layoutY="150.0" startX="-200.0" stroke="WHITE" strokeWidth="3.0" opacity="0.8" />
+
+                  <!-- Symbols -->
+                  <Text fx:id="xText" fill="#E40078" layoutX="180.0" layoutY="260.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="2.0" text="X">
+                     <font>
+                        <Font name="Impact" size="96.0" />
+                     </font>
+                     <effect>
+                        <DropShadow color="#00000066" offsetX="5.0" offsetY="5.0" />
+                     </effect>
+                  </Text>
+                  
+                  <Text fx:id="oText" fill="#205CFC" layoutX="350.0" layoutY="260.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="2.0" text="O">
+                     <font>
+                        <Font name="Impact" size="96.0" />
+                     </font>
+                     <effect>
+                        <DropShadow color="#00000066" offsetX="5.0" offsetY="5.0" />
+                     </effect>
+                  </Text>
+
+                  <!-- Limited Edition Subtitle -->
+                  <Label layoutX="225.0" layoutY="300.0" text="Ultimate Edition" textFill="WHITE" opacity="0.9">
+                     <font>
+                        <Font name="System Italic" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

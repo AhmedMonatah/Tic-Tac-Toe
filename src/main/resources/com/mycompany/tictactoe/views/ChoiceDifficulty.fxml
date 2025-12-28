@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#E40078 0%,#C800B0 40%, #7A3DF0 65%, #205CFC 100%);"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mycompany.tictactoe.controllers.ChoiceDifficultyController">
+
+    <children>
+
+        <VBox alignment="CENTER" spacing="25"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+
+            <Label text="Select Difficulty"
+                   style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;" />
+
+            <Label text="Choose your AI opponent level"
+                   style="-fx-text-fill: #E0E0E0;-fx-font-size: 16px;" />
+
+            <Button text="◎  Easy"
+                    onAction="#easyMode"
+                    prefHeight="60"
+                    prefWidth="360"
+                    style="-fx-background-color: #00C853; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;" />
+
+            <Button text="🔥  Medium"
+                    onAction="#mediumMode"
+                    prefHeight="60"
+                    prefWidth="360"
+                    style="-fx-background-color: #FF6D00; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14;" />
+
+            <Button text="💀  Hard"
+                    onAction="#hardMode"
+                    prefHeight="60"
+                    prefWidth="360"
+                    style="-fx-background-color: #FF1744; -fx-text-fill: white; -fx-font-size: 18px;-fx-font-weight: bold; -fx-background-radius: 14;" />
+        </VBox>
+
+        <ImageView
+                fitHeight="28"
+                fitWidth="28"
+                preserveRatio="true"
+                pickOnBounds="true"
+                onMouseClicked="#handleBack"
+                style="-fx-cursor: hand;"
+                AnchorPane.topAnchor="20"
+                AnchorPane.leftAnchor="20">
+
+            <image>
+                <Image url="@../../../../images/back.png" />
+            </image>
+        </ImageView>
+
+    </children>
+</AnchorPane>

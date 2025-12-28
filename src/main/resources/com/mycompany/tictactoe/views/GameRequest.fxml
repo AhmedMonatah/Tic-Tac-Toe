@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="root" alignment="CENTER" spacing="15.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E40078 0%, #C800B0 40%, #7A3DF0 65%, #205CFC 100%); -fx-padding: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoe.controllers.GameRequestController">
+   <children>
+      <Label fx:id="titleLabel" text="Game Invitation" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="messageLabel" text="User wants to play Tic-Tac-Toe with you!" textFill="WHITE" wrapText="true">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="recordCheckBox" mnemonicParsing="false" text="Allow recording this match" textFill="WHITE">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </CheckBox>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Button fx:id="acceptBtn" mnemonicParsing="false" onAction="#handleAccept" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.5); -fx-border-radius: 20; -fx-border-width: 1; -fx-cursor: hand; -fx-padding: 8 20 8 20; -fx-font-weight: bold;" text="Accept" />
+            <Button fx:id="declineBtn" mnemonicParsing="false" onAction="#handleDecline" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: rgba(255, 255, 255, 0.5); -fx-border-radius: 20; -fx-border-width: 1; -fx-cursor: hand; -fx-padding: 8 20 8 20; -fx-font-weight: bold;" text="Decline" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+   </padding>
+</VBox>

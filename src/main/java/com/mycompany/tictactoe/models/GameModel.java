@@ -1,0 +1,231 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.tictactoe.models;
+
+import classes.SoundManager;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author omark
+ */
+public class GameModel {
+    private int[][] board;
+    private boolean isPlayer1Turn;
+    private boolean isGameActive;
+
+    private int p1Score;
+    private int p2Score;
+    private int drawScore;
+
+    private WinningLineInfo winningLineInfo;
+    
+    // Cache the video path to avoid re-extracting it every time
+    private static Path cachedVideoPath = null;
+
+    public GameModel() {
+        board = new int[3][3];
+        p1Score = 0;
+        p2Score = 0;
+        drawScore = 0;
+        startNewGame();
+    }
+
+    public void startNewGame() {
+        isGameActive = true;
+        isPlayer1Turn = true;
+        winningLineInfo = null;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = 0;
+            }
+        }
+    }
+    
+    public boolean makeMove(int x, int y) {
+        
+        if (!isGameActive || board[x][y] != 0) {
+            return false;
+        }
+        
+        if (isPlayer1Turn) {
+            board[x][y] = 1; // 1 for O
+        } else {
+            board[x][y] = 2; // 2 for X
+        }
+
+        return true;
+    }
+    
+    public boolean checkWinner() {
+        // columns
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+                winningLineInfo = new WinningLineInfo("col", i);
+                handleGameEnd();
+                return true;
+            }
+        }
+
+        // rows
+        for (int j = 0; j < 3; j++) {
+            if (board[0][j] != 0 && board[0][j] == board[1][j] && board[1][j] == board[2][j]) {
+                winningLineInfo = new WinningLineInfo("row", j);
+                handleGameEnd();
+                return true;
+            }
+        }
+
+        // diagonals
+        if (board[0][0] != 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+            winningLineInfo = new WinningLineInfo("diag", 0);
+            handleGameEnd();
+            return true;
+        }
+
+        if (board[0][2] != 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+            winningLineInfo = new WinningLineInfo("diag", 1);
+            handleGameEnd();
+            return true;
+        }
+
+        return false;
+    }
+    
+    
+    public boolean checkDraw() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == 0) {
+                    return false;
+                }
+            }
+        }
+        isGameActive = false; 
+        drawScore++;
+        return true;
+    }
+
+    private void handleGameEnd() {
+        isGameActive = false;
+        if (isPlayer1Turn) {
+            p1Score++;
+        } else {
+            p2Score++;
+        }
+    }
+
+    public void switchTurn() {
+        if (isGameActive) {
+            isPlayer1Turn = !isPlayer1Turn;
+        }
+    }
+    
+    public boolean isPlayer1Turn() {
+        return isPlayer1Turn;
+    }
+
+    public boolean isGameActive() {
+        return isGameActive;
+    }
+    
+    public int getP1Score() {
+        return p1Score;
+    }
+
+    public int getP2Score() {
+        return p2Score;
+    }
+
+    public int getDrawScore() {
+        return drawScore;
+    }
+
+    public WinningLineInfo getWinningLineInfo() {
+        return winningLineInfo;
+    }
+
+    public int getCell(int x, int y) {
+        return board[x][y];
+    }
+    
+    
+    public static class WinningLineInfo {
+        public String type; // "row", "col", "diag"
+        public int index;
+
+        public WinningLineInfo(String type, int index) {
+            this.type = type;
+            this.index = index;
+        }
+    }
+    
+    public void showVideoInDialog() {
+        Platform.runLater(() -> {
+
+            SoundManager.pauseBackground();
+
+            Stage videoStage = new Stage();
+            videoStage.initModality(Modality.APPLICATION_MODAL);
+            videoStage.setTitle("Winner Video");
+
+            try {
+                if (cachedVideoPath == null || !Files.exists(cachedVideoPath)) {
+                    InputStream is = getClass().getResourceAsStream("/video/winner.mp4");
+                    if (is != null) {
+                        cachedVideoPath = Files.createTempFile("winner_video", ".mp4");
+                        Files.copy(is, cachedVideoPath, StandardCopyOption.REPLACE_EXISTING);
+                        cachedVideoPath.toFile().deleteOnExit();
+                    } else {
+                        System.err.println("Could not find video resource: /video/winner.mp4");
+                        SoundManager.resumeBackground();
+                        return;
+                    }
+                }
+
+                Media media = new Media(cachedVideoPath.toUri().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(mediaPlayer);
+
+                mediaView.setPreserveRatio(false);
+
+                StackPane root = new StackPane(mediaView);
+                Scene scene = new Scene(root, 650, 450);
+
+                mediaView.fitWidthProperty().bind(scene.widthProperty());
+                mediaView.fitHeightProperty().bind(scene.heightProperty());
+
+                videoStage.setScene(scene);
+
+                videoStage.setOnShown(e -> mediaPlayer.play());
+
+                videoStage.setOnCloseRequest(e -> {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose();   
+                    SoundManager.resumeBackground();
+                });
+
+                videoStage.showAndWait();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                SoundManager.resumeBackground(); 
+            }
+        });
+    }
+
+}
