@@ -87,7 +87,6 @@ public class GameplayController implements Initializable {
     private Button btn12;
     @FXML
     private Button btn22;
-    @FXML
    // private static CheckBox recOnlineMatch=Users_listController.recordCheckBox;
 
     /**

@@ -13,8 +13,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -23,6 +25,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -59,11 +62,11 @@ public class GameRecordingsController implements Initializable {
                 }
             }
         }
-        
+
         if (recordCountText != null) {
             recordCountText.setText(recordingFiles.size() + " Recordings available");
         }
-        
+
         // Fix: Use the ListView instead of the null VBox
         if (recordsListView != null) {
             recordsListView.setItems(recordingFiles);
@@ -73,30 +76,45 @@ public class GameRecordingsController implements Initializable {
 
     private void playRecording(String filename) {
         try {
-            File file = new File(System.getProperty("user.home") + "/Moves_Tic_Tac/" + filename);
-            if (file.exists()) {
-                java.awt.Desktop.getDesktop().open(file);
-            }
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoe/views/DisplayRecord.fxml")
+            );
+
+            Scene scene = new Scene(loader.load());
+
+            DisplayRecordController controller = loader.getController();
+
+            File file = new File(
+                    System.getProperty("user.home") + "/Moves_Tic_Tac/" + filename
+            );
+
+            controller.loadReplay(file); // 🔥 pass file
+
+            Stage stage = new Stage();
+            stage.setTitle("Game Replay");
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     @FXML
     private void onBack(ActionEvent event) {
-         try {
-          App.setRoot("GameMode");
+        try {
+            App.setRoot("GameMode");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     private class RecordingListCell extends ListCell<String> {
+
         @Override
         protected void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
-            
+
             if (empty || item == null) {
                 setText(null);
                 setGraphic(null);
@@ -110,16 +128,16 @@ public class GameRecordingsController implements Initializable {
                 Text fileName = new Text(item);
                 fileName.setFill(Color.WHITE);
                 fileName.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-                
+
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
-                
+
                 Button playBtn = new Button("Play");
                 playBtn.setStyle("-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-background-radius: 10; -fx-cursor: hand;");
                 playBtn.setOnAction(e -> playRecording(item));
-                
+
                 hbox.getChildren().addAll(fileName, spacer, playBtn);
-                
+
                 setGraphic(hbox);
                 setText(null);
                 setStyle("-fx-background-color: transparent; -fx-padding: 5;");
