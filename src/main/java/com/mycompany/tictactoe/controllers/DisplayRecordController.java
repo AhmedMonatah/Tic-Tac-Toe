@@ -257,12 +257,24 @@ public class DisplayRecordController implements Initializable {
 
     
     @FXML
-    private void returnToRecs(ActionEvent event) {
+    private void returnToRecs(MouseEvent event) {
         try {
             App.setRoot("GameRecordings");
         } catch (IOException ex) {
             System.getLogger(DisplayRecordController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+    }
+
+    @FXML
+    private void btn02(ActionEvent event) {
+    }
+
+    @FXML
+    private void btn00(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleBack(MouseEvent event) {
     }
 
 }

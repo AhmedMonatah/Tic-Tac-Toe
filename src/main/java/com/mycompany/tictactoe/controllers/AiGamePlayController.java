@@ -290,7 +290,10 @@ public class AiGamePlayController implements Initializable  {
             }            
             
             // Format: ahmed_vs_ai_1_12_2025.txt
-            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("d_M_yyyy"));
+            
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+
+            //String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("d_M_yyyy"));
             String playerName = playerData.getPlayerName();
             if(playerName == null || playerName.isEmpty()) playerName = "Player";
             
