@@ -556,7 +556,7 @@ public class GameplayController implements Initializable {
                     "Moves_Tic_Tac"
             );
             if (!dir.exists()) dir.mkdirs();
-            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("d_M_yyyy"));
+            String time = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
             
             String p1 = player1.getText();
             String p2 = player2.getText();
