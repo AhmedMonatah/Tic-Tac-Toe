@@ -429,13 +429,16 @@ public class GameplayController implements Initializable {
                     }
 
                     AppConfig.IS_ONLINE = false;
+                    App.setRoot("users_list");
+                } else {
+                    App.setRoot("Player1_vs_Player2"); 
                 }
 
                 if (dos != null) {
                     dos.close();
                     dos = null; 
                 }
-                App.setRoot("users_list");
+                
             } catch (Exception ex) {
                 System.err.println("Logout Error: " + ex.getMessage());
                 try { App.setRoot("users_list"); } catch (IOException e) {}
