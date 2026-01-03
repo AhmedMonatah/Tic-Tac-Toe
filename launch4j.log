@@ -38,3 +38,23 @@ Launcher:	C:\Program Files\Apache NetBeans\jdk\bin\javaw.exe
 Launcher args:	-Dsun.net.inetaddr.ttl=0 -jar "D:\iti\java\Tic-Tac-Toe\Tic-Tac-Toe.exe"
 Args length:	71/32768 chars
 Exit code:	0
+
+
+Version:	3.50
+CmdLine:	D:\iti\java\Tic-Tac-Toe\Tic-Tac-Toe.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	D:\iti\java\Tic-Tac-Toe\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+Substitute:	JAVA_HOME = C:\Program Files\Apache NetBeans\jdk
+Substitute:	PATH = C:\Program Files\Common Files\Oracle\Java\javapath;%JAVA_HOME%\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\MinGW\bin;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Users\Ahmed\develop\flutter\bin;C:\Users\Ahmed\AppData\Local\Android\Sdk\platform-tools;C:\Users\Ahmed\AppData\Local\Android\Sdk\emulator;C:\Program Files\Apache NetBeans\jdk\bin;C:\Users\Ahmed\AppData\Local\Microsoft\WindowsApps;C:\Users\Ahmed\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Ahmed\develop\flutter\bin;C:\Users\Ahmed\AppData\Local\Programs\Antigravity\bin;C:\Users\Ahmed\AppData\Local\Android\Sdk\platform-tools;C:\Users\Ahmed\AppData\Local\PowerToys\DSCModules\;;C:\Program Files\Apache NetBeans\jdk\bin
+JRE paths:	C:\Program Files\Apache NetBeans\jdk;C:\Program Files\Common Files\Oracle\Java\javapath;%JAVA_HOME%\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\MinGW\bin;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Users\Ahmed\develop\flutter\bin;C:\Users\Ahmed\AppData\Local\Android\Sdk\platform-tools;C:\Users\Ahmed\AppData\Local\Android\Sdk\emulator;C:\Program Files\Apache NetBeans\jdk\bin;C:\Users\Ahmed\AppData\Local\Microsoft\WindowsApps;C:\Users\Ahmed\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Ahmed\develop\flutter\bin;C:\Users\Ahmed\AppData\Local\Programs\Antigravity\bin;C:\Users\Ahmed\AppData\Local\Android\Sdk\platform-tools;C:\Users\Ahmed\AppData\Local\PowerToys\DSCModules\;;C:\Program Files\Apache NetBeans\jdk\bin
+Check launcher:	C:\Program Files\Apache NetBeans\jdk\bin\javaw.exe (OK)
+Version string: 1.025.000_001 / 64-Bit (OK)
+Launcher:	C:\Program Files\Apache NetBeans\jdk\bin\javaw.exe
+Launcher args:	-jar "D:\iti\java\Tic-Tac-Toe\Tic-Tac-Toe.exe"
+Args length:	46/32768 chars
+Exit code:	0
